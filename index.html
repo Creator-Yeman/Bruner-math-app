@@ -1340,6 +1340,11 @@
             slot.appendChild(el);
           }
         } else {
+          const slot = document.getElementById(`slot-${block.slotKey}`);
+          if (slot) {
+            const slotNameMap = { a2: 'a² 자리', ab1: 'ba (ab) 자리', ab2: 'ab 자리', b2: 'b² 자리' };
+            slot.innerHTML = `<span class="slot-placeholder">${slotNameMap[block.slotKey]}</span>`;
+          }
           el.style.width = `${block.w}px`;
           el.style.height = `${block.h}px`;
           el.title = '드래그하거나 탭하여 틀에 넣으세요';
@@ -1526,8 +1531,14 @@
     }
 
     function resetStage1Blocks() {
+      const slotNameMap = { a2: 'a² 자리', ab1: 'ba (ab) 자리', ab2: 'ab 자리', b2: 'b² 자리' };
       ['a2', 'ab1', 'ab2', 'b2'].forEach(key => {
         AppState.placedSlots[key] = false;
+        const slot = document.getElementById(`slot-${key}`);
+        if (slot) {
+          slot.innerHTML = `<span class="slot-placeholder">${slotNameMap[key]}</span>`;
+          slot.classList.remove('hovered');
+        }
       });
       playSound('click');
       document.getElementById('misconceptionBanner').classList.add('hidden');
