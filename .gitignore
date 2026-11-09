@@ -1,0 +1,5 @@
+node_modules/
+package-lock.json
+package.json
+f1_example.txt
+f2_template.txt
