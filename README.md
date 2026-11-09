@@ -6,6 +6,9 @@
 🌐 **웹에서 바로 실행하기 (Live Demo):**  
 👉 **[https://creator-yeman.github.io/Bruner-math-app/](https://creator-yeman.github.io/Bruner-math-app/)**
 
+📑 **수업실연 현장용 실전 큐시트 (누구나 바로 열람 & A4 인쇄 가능):**  
+👉 **[https://creator-yeman.github.io/Bruner-math-app/cuesheet.html](https://creator-yeman.github.io/Bruner-math-app/cuesheet.html)**
+
 ---
 
 ## 🎯 교육적 목표 및 브루너의 3단계 인지 발달 모델
