@@ -132,6 +132,34 @@
     input[type=range] {
       accent-color: #4f46e5;
     }
+
+    /* ---- Discovery Panel animations ---- */
+    @keyframes termReveal {
+      0%   { opacity: 0; transform: translateY(-8px) scale(0.7); }
+      60%  { transform: translateY(2px) scale(1.08); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .term-reveal {
+      animation: termReveal 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    @keyframes termPop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+    .term-pop {
+      animation: termPop 0.3s ease-out;
+    }
+    .discovery-blank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.5rem;
+      height: 1.5rem;
+      border-bottom: 2.5px dashed #a5b4fc;
+      color: #c7d2fe;
+      font-size: 0.75rem;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col transition-colors duration-300">
@@ -370,6 +398,23 @@
             </div>
           </div>
 
+          <!-- ★ DISCOVERY PANEL: 공식 자가발견 패널 (핵심 차별화 기능) -->
+          <div class="w-full mt-3 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-slate-50 rounded-xl p-3 shadow-inner">
+            <div class="flex items-center gap-1.5 mb-2 pb-1.5 border-b border-indigo-100">
+              <span class="text-sm">🔍</span>
+              <span class="text-xs font-black text-indigo-800">내가 발견한 공식</span>
+              <span class="ml-auto text-[10px] text-indigo-400 font-medium">조각을 채울수록 공식이 완성됩니다</span>
+            </div>
+            <!-- Formula build-up display -->
+            <div class="flex items-center flex-wrap gap-1 font-mono text-sm font-black justify-center py-1" id="discoveryFormula">
+              <!-- Dynamically populated -->
+            </div>
+            <!-- Per-piece hint strip -->
+            <div class="mt-2 flex flex-wrap gap-1.5 justify-center" id="discoveryPieces">
+              <!-- Piece badges appear as blocks are placed -->
+            </div>
+          </div>
+
           <!-- Stage 1 Success Card -->
           <div id="stage1SuccessCard" class="hidden w-full mt-2 p-3 bg-emerald-50 border-2 border-emerald-400 rounded-xl transition-all">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5">
@@ -378,9 +423,9 @@
                   <i data-lucide="check" class="w-4 h-4"></i>
                 </div>
                 <div>
-                  <h4 class="font-black text-emerald-950 text-xs sm:text-sm">🎉 정사각형 (a+b)² 완성!</h4>
+                  <h4 class="font-black text-emerald-950 text-xs sm:text-sm">🎉 (a+b)² 공식을 스스로 발견했습니다!</h4>
                   <p class="text-[11px] text-emerald-800">
-                    <strong class="font-bold">a² 1개 + ab 2개 + b² 1개</strong>가 모여 빈틈없이 채워졌습니다!
+                    조각을 맞추면서 <strong class="font-bold">a² + 2ab + b²</strong> 공식을 직접 완성했어요!
                   </p>
                 </div>
               </div>
@@ -1132,6 +1177,124 @@
 
       renderPartsTray();
       updatePlacementProgress();
+      updateDiscoveryPanel(null, false); // ★ 슬라이더 변경 시 발견 패널 초기화
+    }
+
+    /* ★ DISCOVERY PANEL: 공식 자가발견 패널 업데이트
+     *   slotKey: 방금 추가된 슬롯 (or null = 전체 재렌더)
+     *   animate: 애니메이션 여부
+     * ------------------------------------------------------------------ */
+    function updateDiscoveryPanel(newSlotKey, animate) {
+      const fEl   = document.getElementById('discoveryFormula');
+      const pEl   = document.getElementById('discoveryPieces');
+      if (!fEl || !pEl) return;
+
+      const placed = AppState.placedSlots;
+
+      // Ordered groups: a² term, 2ab term, b² term
+      // We show each term as it appears
+      const hasA2  = placed.a2;
+      const hasAB  = placed.ab1 || placed.ab2;
+      const hasBothAB = placed.ab1 && placed.ab2;
+      const hasB2  = placed.b2;
+
+      // ---- Build formula string with blanks ----
+      // Always show: (a+b)² =
+      let formulaParts = [];
+
+      // a² term
+      if (hasA2) {
+        formulaParts.push({ text: 'a²', color: '#4F46E5', key: 'a2' });
+      } else {
+        formulaParts.push({ text: null, label: 'a²?', key: 'a2-blank' });
+      }
+
+      // + 2ab or +ab terms
+      if (hasBothAB) {
+        formulaParts.push({ text: '+', color: '#374151', key: 'plus1' });
+        formulaParts.push({ text: '2ab', color: '#0D9488', key: 'ab' });
+      } else if (hasAB) {
+        formulaParts.push({ text: '+', color: '#374151', key: 'plus1' });
+        formulaParts.push({ text: 'ab', color: '#0284C7', key: 'ab1-partial', note: '+ab 한 개 더!' });
+      } else {
+        formulaParts.push({ text: null, label: '+2ab?', key: 'ab-blank' });
+      }
+
+      // + b² term
+      if (hasB2) {
+        formulaParts.push({ text: '+', color: '#374151', key: 'plus2' });
+        formulaParts.push({ text: 'b²', color: '#D97706', key: 'b2' });
+      } else {
+        formulaParts.push({ text: null, label: '+b²?', key: 'b2-blank' });
+      }
+
+      // Check if complete
+      const isComplete = hasA2 && hasBothAB && hasB2;
+
+      // ---- Render formula ----
+      fEl.innerHTML = '';
+
+      // LHS: (a+b)² =
+      const lhs = document.createElement('span');
+      lhs.className = 'text-slate-500';
+      lhs.textContent = '(a+b)²  =  ';
+      fEl.appendChild(lhs);
+
+      formulaParts.forEach(part => {
+        if (part.text === null) {
+          // Blank slot
+          const blank = document.createElement('span');
+          blank.className = 'discovery-blank mx-0.5';
+          blank.textContent = part.label;
+          fEl.appendChild(blank);
+        } else {
+          const span = document.createElement('span');
+          span.className = 'mx-0.5 inline-block';
+          span.style.color = part.color;
+          // Animate newly placed term
+          if (animate && newSlotKey && part.key && part.key.includes(newSlotKey.replace('-', ''))) {
+            span.classList.add('term-reveal');
+          }
+          span.textContent = part.text;
+          fEl.appendChild(span);
+        }
+      });
+
+      // Complete state
+      if (isComplete) {
+        fEl.innerHTML = '';
+        const full = document.createElement('span');
+        full.className = 'term-reveal inline-flex items-center gap-1 flex-wrap justify-center';
+        full.innerHTML = `<span class="text-slate-600">(a+b)²  =  </span><span style="color:#4F46E5" class="term-pop">a²</span><span class="text-slate-600"> + </span><span style="color:#0D9488" class="term-pop">2ab</span><span class="text-slate-600"> + </span><span style="color:#D97706" class="term-pop">b²</span>`;
+        fEl.appendChild(full);
+      }
+
+      // ---- Render piece badges ----
+      pEl.innerHTML = '';
+      const slotOrder = ['a2', 'ab1', 'ab2', 'b2'];
+      const slotMeta = {
+        a2:  { label: 'a²',  bg: 'bg-indigo-100', text: 'text-indigo-700', border: 'border-indigo-300', desc: '큰 정사각형' },
+        ab1: { label: 'ba',  bg: 'bg-teal-100',   text: 'text-teal-700',   border: 'border-teal-300',   desc: '세로 직사각형' },
+        ab2: { label: 'ab',  bg: 'bg-sky-100',    text: 'text-sky-700',    border: 'border-sky-300',    desc: '가로 직사각형' },
+        b2:  { label: 'b²',  bg: 'bg-amber-100',  text: 'text-amber-700',  border: 'border-amber-300',  desc: '작은 정사각형' },
+      };
+
+      slotOrder.forEach(key => {
+        const meta = slotMeta[key];
+        const isPlaced = placed[key];
+        const badge = document.createElement('div');
+        badge.className = `flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] font-bold transition-all ${
+          isPlaced
+            ? `${meta.bg} ${meta.text} ${meta.border} ${(animate && newSlotKey === key) ? 'term-reveal' : ''}`
+            : 'bg-slate-100 text-slate-400 border-slate-200 opacity-50'
+        }`;
+        badge.innerHTML = `
+          ${isPlaced ? '✓' : '·'}
+          <span class="font-mono">${meta.label}</span>
+          <span class="font-normal">${meta.desc}</span>
+        `;
+        pEl.appendChild(badge);
+      });
     }
 
     function rotateBlock(slotKey, e) {
@@ -1354,6 +1517,7 @@
       playSound('snap');
       renderPartsTray();
       updatePlacementProgress();
+      updateDiscoveryPanel(slotKey, true); // ★ 발견 패널 업데이트
 
       const allPlaced = Object.values(AppState.placedSlots).every(v => v === true);
       if (allPlaced) onStage1Complete();
@@ -1369,6 +1533,7 @@
       }
       renderPartsTray();
       updatePlacementProgress();
+      updateDiscoveryPanel(null, false); // ★ 발견 패널 전체 재렌더
       document.getElementById('stage1SuccessCard').classList.add('hidden');
     }
 
@@ -1392,6 +1557,7 @@
       playSound('fanfare');
       renderPartsTray();
       updatePlacementProgress();
+      updateDiscoveryPanel(null, true); // ★ 자동완성 시 패널 애니메이션
       onStage1Complete();
     }
 
@@ -1411,6 +1577,7 @@
       document.getElementById('misconceptionBanner').classList.add('hidden');
       document.getElementById('stage1SuccessCard').classList.add('hidden');
       renderStage1();
+      updateDiscoveryPanel(null, false); // ★ 리셋 시 발견 패널 초기화
     }
 
     function triggerMisconceptionDemo() {
@@ -1418,6 +1585,7 @@
       playSound('snap');
       renderPartsTray();
       updatePlacementProgress();
+      updateDiscoveryPanel(null, false); // ★ 오개념 실험 시에도 패널 반영
 
       const banner = document.getElementById('misconceptionBanner');
       banner.classList.remove('hidden');
@@ -1431,6 +1599,7 @@
       renderPartsTray();
       updatePlacementProgress();
       document.getElementById('misconceptionBanner').classList.add('hidden');
+      updateDiscoveryPanel(null, true); // ★ 나머지 항 채워지며 발견
       onStage1Complete();
     }
 
