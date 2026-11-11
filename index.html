@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>브루너의 표상 양식으로 배우는 이항정리 (a+b)² | Bruner Math Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>이항정리 완전정복 (a+b)² | 인터랙티브 수학 실험실</title>
 
   <!-- Google Fonts: Pretendard & Inter -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -66,7 +66,7 @@
       transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     }
     .snap-target.hovered {
-      background-color: rgba(99, 102, 241, 0.2) !important;
+      background-color: rgba(99, 102, 241, 0.25) !important;
       border-color: #4f46e5 !important;
       border-width: 2px !important;
       transform: scale(1.02);
@@ -79,6 +79,7 @@
       touch-action: none;
       cursor: grab;
       will-change: transform;
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
     }
     .draggable-block.is-dragging {
       cursor: grabbing !important;
@@ -89,7 +90,6 @@
     body.presentation-mode {
       background-color: #0f172a;
       color: #f8fafc;
-      font-size: 1.15rem;
     }
     body.presentation-mode header {
       background-color: #1e293b;
@@ -118,13 +118,14 @@
       color: #f8fafc !important;
     }
 
-    /* Gentle Pulse for attention callout */
-    @keyframes gentle-pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.015); }
+    /* Compact scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
     }
-    .animate-gentle-pulse {
-      animation: gentle-pulse 2.2s infinite ease-in-out;
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
     }
 
     /* Custom range sliders styling */
@@ -136,96 +137,64 @@
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col transition-colors duration-300">
 
   <!-- ========================================================================= -->
-  <!-- TOP HEADER & BRANDING                                                     -->
+  <!-- 1. SLIM & RESPONSIVE TOP HEADER                                           -->
   <!-- ========================================================================= -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs transition-colors duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16 sm:h-20">
-        <!-- Logo & Title -->
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center text-white shadow-md shadow-indigo-200 shrink-0">
-            <i data-lucide="shapes" class="w-6 h-6 sm:w-7 sm:h-7"></i>
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-2xs transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6">
+      <div class="flex items-center justify-between h-14 sm:h-16">
+        <!-- Logo & App Title -->
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center text-white shadow-sm shrink-0">
+            <i data-lucide="shapes" class="w-5 h-5 sm:w-6 sm:h-6"></i>
           </div>
           <div>
-            <div class="flex items-center space-x-2">
-              <span class="text-[11px] font-black uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">
-                Bruner Math Lab
-              </span>
-              <span class="hidden sm:inline-block text-xs text-slate-400">|</span>
-              <span class="hidden sm:inline-block text-xs text-slate-500 font-semibold">제롬 브루너 표상 양식 이론</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-black uppercase text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-100">Math Lab</span>
+              <span class="text-xs text-slate-400 hidden sm:inline">|</span>
+              <span class="text-xs text-slate-500 font-bold hidden sm:inline">중학교 곱셈 공식 탐구</span>
             </div>
-            <h1 class="text-base sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-              이항정리의 기하학적·대수적 이해
-              <span class="text-indigo-600 font-black text-sm sm:text-xl font-mono">(a+b)²</span>
+            <h1 class="text-sm sm:text-lg font-black text-slate-900 tracking-tight flex items-center gap-1.5">
+              이항정리 완전정복
+              <span class="text-indigo-600 font-mono font-black text-sm sm:text-base">(a+b)²</span>
             </h1>
           </div>
         </div>
 
-        <!-- Utility Action Controls -->
-        <div class="flex items-center space-x-2 sm:space-x-3">
-          <!-- Theory Modal Button -->
-          <button id="theoryBtn" class="flex items-center space-x-1.5 px-3 py-2 text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all" title="브루너 인지이론 안내">
-            <i data-lucide="book-open" class="w-4 h-4 text-indigo-600"></i>
-            <span class="hidden md:inline">학습 원리 안내</span>
+        <!-- Utility Buttons -->
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+          <!-- Presentation / Chalkboard Mode Toggle -->
+          <button id="presentModeBtn" class="flex items-center space-x-1 px-2.5 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all" title="칠판 모드 전환">
+            <i data-lucide="presentation" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span class="hidden sm:inline" id="presentModeLabel">칠판 모드</span>
           </button>
 
-          <!-- Chalkboard / Presentation Mode Toggle -->
-          <button id="presentModeBtn" class="flex items-center space-x-1.5 px-3 py-2 text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all" title="교사용 칠판/프로젝터 고대비 모드 전환">
-            <i data-lucide="presentation" class="w-4 h-4 text-emerald-600"></i>
-            <span class="hidden md:inline" id="presentModeLabel">칠판 모드</span>
-          </button>
-
-          <!-- Audio Toggle -->
-          <button id="soundToggleBtn" class="p-2 sm:px-3 sm:py-2 text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all flex items-center space-x-1" title="효과음 켜기/끄기">
-            <i id="soundIcon" data-lucide="volume-2" class="w-4 h-4 text-indigo-600"></i>
-            <span class="hidden lg:inline text-xs" id="soundLabel">효과음 On</span>
+          <!-- Audio Sound Effects Toggle -->
+          <button id="soundToggleBtn" class="p-1.5 sm:px-2.5 sm:py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all flex items-center space-x-1" title="효과음 켜기/끄기">
+            <i id="soundIcon" data-lucide="volume-2" class="w-3.5 h-3.5 text-indigo-600"></i>
+            <span class="hidden sm:inline text-xs" id="soundLabel">소리 On</span>
           </button>
         </div>
       </div>
 
-      <!-- ========================================================================= -->
-      <!-- BRUNER'S 3-STAGE PROGRESS STEPPER TABS                                    -->
-      <!-- ========================================================================= -->
-      <div class="py-2.5 border-t border-slate-100 flex items-center justify-between overflow-x-auto scrollbar-none">
-        <nav class="flex items-center space-x-2 sm:space-x-4 min-w-max w-full justify-between" aria-label="Stages">
+      <!-- Compact 3-Stage Stepper Navigation -->
+      <div class="py-1.5 border-t border-slate-100 flex items-center justify-between overflow-x-auto scrollbar-none">
+        <nav class="flex items-center space-x-1.5 sm:space-x-3 w-full justify-between" aria-label="Stages">
           <!-- Stage 1 Tab -->
-          <button id="tabStage1" onclick="switchStage(1)" class="stage-nav-btn active flex items-center space-x-2.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all bg-indigo-600 text-white shadow-md shadow-indigo-200">
-            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-white/20 text-xs font-black">1</span>
-            <div class="text-left">
-              <span class="block text-[10px] uppercase tracking-wider text-indigo-100 font-bold">Enactive Mode</span>
-              <span class="block font-black">1단계: 활동적 표상 (구체적 조작)</span>
-            </div>
-            <i data-lucide="puzzle" class="w-4 h-4 ml-1"></i>
+          <button id="tabStage1" onclick="switchStage(1)" class="stage-nav-btn active flex-1 flex items-center justify-center space-x-1.5 sm:space-x-2 py-1.5 px-2.5 rounded-lg text-xs font-extrabold transition-all bg-indigo-600 text-white shadow-xs">
+            <span class="flex items-center justify-center w-5 h-5 rounded-full bg-white/20 text-[11px] font-black">1</span>
+            <span class="truncate">1단계: 블록 퍼즐 조립</span>
           </button>
-
-          <!-- Stepper Arrow -->
-          <div class="text-slate-300 hidden sm:block">
-            <i data-lucide="arrow-right" class="w-5 h-5"></i>
-          </div>
 
           <!-- Stage 2 Tab -->
-          <button id="tabStage2" onclick="switchStage(2)" class="stage-nav-btn flex items-center space-x-2.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
-            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-black">2</span>
-            <div class="text-left">
-              <span class="block text-[10px] uppercase tracking-wider text-slate-400 font-bold">Iconic Mode</span>
-              <span class="block font-black">2단계: 영상적 표상 (시각적 심상)</span>
-            </div>
-            <i data-lucide="eye" class="w-4 h-4 ml-1"></i>
+          <button id="tabStage2" onclick="switchStage(2)" class="stage-nav-btn flex-1 flex items-center justify-center space-x-1.5 sm:space-x-2 py-1.5 px-2.5 rounded-lg text-xs font-extrabold transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+            <span class="flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[11px] font-black">2</span>
+            <span class="truncate">2단계: 넓이 도해 분석</span>
           </button>
 
-          <!-- Stepper Arrow -->
-          <div class="text-slate-300 hidden sm:block">
-            <i data-lucide="arrow-right" class="w-5 h-5"></i>
-          </div>
-
           <!-- Stage 3 Tab -->
-          <button id="tabStage3" onclick="switchStage(3)" class="stage-nav-btn flex items-center space-x-2.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
-            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-black">3</span>
-            <div class="text-left">
-              <span class="block text-[10px] uppercase tracking-wider text-slate-400 font-bold">Symbolic Mode</span>
-              <span class="block font-black">3단계: 기호적 표상 (추상적 기호)</span>
-            </div>
-            <i data-lucide="binary" class="w-4 h-4 ml-1"></i>
+          <button id="tabStage3" onclick="switchStage(3)" class="stage-nav-btn flex-1 flex items-center justify-center space-x-1.5 sm:space-x-2 py-1.5 px-2.5 rounded-lg text-xs font-extrabold transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+            <span class="flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[11px] font-black">3</span>
+            <span class="truncate">3단계: 공식 & 도전 챌린지</span>
           </button>
         </nav>
       </div>
@@ -233,199 +202,168 @@
   </header>
 
   <!-- ========================================================================= -->
-  <!-- MAIN WORKSPACE                                                            -->
+  <!-- MAIN WORKSPACE CONTAINER (Auto-scaling view)                              -->
   <!-- ========================================================================= -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-3 sm:py-4">
 
     <!-- ======================================================================= -->
-    <!-- STAGE 1: ENACTIVE (활동적 표상 - 구체적 조작)                           -->
+    <!-- STAGE 1: 블록 퍼즐 조립 (다채로운 조작 & 회전 & 미션 챌린지)            -->
     <!-- ======================================================================= -->
     <section id="stage1View" class="stage-section block">
-      <!-- Pedagogical Guide Banner -->
-      <div class="bg-gradient-to-r from-indigo-500/10 via-sky-500/10 to-emerald-500/10 border border-indigo-100 rounded-2xl p-4 sm:p-5 mb-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="flex items-start space-x-3.5">
-            <div class="p-3 bg-indigo-600 text-white rounded-xl shadow-xs shrink-0">
-              <i data-lucide="hand" class="w-6 h-6"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-[11px] font-black uppercase px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-md">활동적 표상 단계</span>
-                <h2 class="text-base sm:text-lg font-black text-slate-900">손으로 블록을 직접 조작하며 빈틈없이 채워보기</h2>
-              </div>
-              <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                신체 감각과 물리적 행동으로 지식을 내면화합니다. 블록 조각들을 드래그하거나 탭하여 큰 정사각형 <strong class="text-indigo-700 font-mono">(a+b)²</strong>을 완성하세요!
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 self-start md:self-auto shrink-0">
-            <button onclick="triggerMisconceptionDemo()" class="text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200 px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-1.5 shadow-xs">
-              <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600"></i>
-              <span>오개념 실험: (a+b)² = a²+b² 일까?</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Parameters & Controls Bar -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 mb-6 shadow-xs">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+      
+      <!-- Compact Control Strip -->
+      <div class="bg-white border border-slate-200 rounded-xl p-2.5 sm:p-3 mb-3 shadow-2xs">
+        <div class="flex flex-wrap items-center justify-between gap-2.5">
           
-          <!-- Slider A -->
-          <div class="md:col-span-4 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
-            <div class="flex justify-between items-center mb-1.5">
-              <label for="sliderA_stage1" class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-mathA2 inline-block"></span>
-                <span>길이 <strong>a</strong> 조절</span>
-              </label>
-              <span id="labelA_stage1" class="text-xs font-black bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-md font-mono">a = 4</span>
+          <!-- Slider A & B in a single inline row -->
+          <div class="flex items-center gap-3 sm:gap-6 flex-wrap">
+            <!-- A Slider -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                <span class="w-2.5 h-2.5 rounded-full bg-mathA2"></span>
+                <span>가로 a:</span>
+              </span>
+              <input type="range" id="sliderA_stage1" min="2" max="6" value="4" step="1" 
+                     class="w-20 sm:w-28 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+              <span id="labelA_stage1" class="text-xs font-black bg-indigo-50 text-indigo-700 px-1.5 py-0.2 rounded font-mono">4</span>
             </div>
-            <input type="range" id="sliderA_stage1" min="2" max="6" value="4" step="1" 
-                   class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
-            <div class="flex justify-between text-[10px] text-slate-400 font-semibold mt-1">
-              <span>짧게 (2)</span>
-              <span>보통 (4)</span>
-              <span>길게 (6)</span>
-            </div>
-          </div>
 
-          <!-- Slider B -->
-          <div class="md:col-span-4 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
-            <div class="flex justify-between items-center mb-1.5">
-              <label for="sliderB_stage1" class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-mathB2 inline-block"></span>
-                <span>길이 <strong>b</strong> 조절</span>
-              </label>
-              <span id="labelB_stage1" class="text-xs font-black bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md font-mono">b = 2</span>
-            </div>
-            <input type="range" id="sliderB_stage1" min="1" max="5" value="2" step="1" 
-                   class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
-            <div class="flex justify-between text-[10px] text-slate-400 font-semibold mt-1">
-              <span>작게 (1)</span>
-              <span>보통 (2)</span>
-              <span>크게 (5)</span>
+            <!-- B Slider -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                <span class="w-2.5 h-2.5 rounded-full bg-mathB2"></span>
+                <span>세로 b:</span>
+              </span>
+              <input type="range" id="sliderB_stage1" min="1" max="5" value="2" step="1" 
+                     class="w-20 sm:w-28 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+              <span id="labelB_stage1" class="text-xs font-black bg-amber-50 text-amber-700 px-1.5 py-0.2 rounded font-mono">2</span>
             </div>
           </div>
 
           <!-- Quick Action Buttons -->
-          <div class="md:col-span-4 flex flex-wrap gap-2 justify-end">
-            <button onclick="autoSolveStage1()" class="flex-1 sm:flex-initial text-xs sm:text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2.5 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5">
-              <i data-lucide="sparkles" class="w-4 h-4"></i>
-              <span>모두 자동 조립</span>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button onclick="triggerMisconceptionDemo()" class="text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1">
+              <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-600"></i>
+              <span>🚨 오개념 실험 (a²+b²?)</span>
             </button>
-            <button onclick="resetStage1Blocks()" class="flex-1 sm:flex-initial text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5">
-              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <button onclick="autoSolveStage1()" class="text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-2.5 py-1.5 rounded-lg shadow-2xs transition-all flex items-center gap-1">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>자동 완성</span>
+            </button>
+            <button onclick="resetStage1Blocks()" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
               <span>다시하기</span>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Workbench Layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Workbench Grid (Optimized to fit on screen) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 items-start">
         
-        <!-- Left: Parts Tray (부품 보관함) -->
-        <div class="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col">
-          <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-            <div class="flex items-center space-x-2">
-              <i data-lucide="package" class="w-5 h-5 text-indigo-600"></i>
-              <h3 class="font-bold text-slate-800 text-sm sm:text-base">도형 조각 보관함</h3>
+        <!-- Left: Parts Tray (부품 보관함 & 회전 조작) -->
+        <div class="lg:col-span-5 bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-2xs flex flex-col">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+            <div class="flex items-center space-x-1.5">
+              <i data-lucide="package" class="w-4 h-4 text-indigo-600"></i>
+              <h3 class="font-bold text-slate-800 text-xs sm:text-sm">조각 보관함</h3>
             </div>
-            <span class="text-xs text-slate-400">드래그하거나 탭하세요</span>
+            <span class="text-[11px] text-slate-400">조각을 드래그하거나 탭하여 회전/조립</span>
           </div>
 
           <!-- Tray Container -->
-          <div id="partsTray" class="min-h-[380px] p-4 bg-slate-50/70 border-2 border-dashed border-slate-200 rounded-xl relative flex flex-wrap gap-4 items-center justify-center content-center transition-colors">
-            <!-- 4 draggable blocks are populated here -->
+          <div id="partsTray" class="min-h-[220px] sm:min-h-[280px] p-2.5 bg-slate-50/70 border-2 border-dashed border-slate-200 rounded-lg relative flex flex-wrap gap-2.5 items-center justify-center content-center transition-colors">
+            <!-- 4 draggable blocks populated here -->
           </div>
 
-          <!-- Tip Box -->
-          <div class="mt-4 p-3 bg-blue-50/70 border border-blue-100 rounded-xl flex items-center gap-2.5 text-xs text-blue-800">
-            <i data-lucide="lightbulb" class="w-4 h-4 text-blue-600 shrink-0"></i>
-            <span><strong>팁:</strong> 각 조각을 클릭(터치)하기만 해도 빈자리로 쏙 이동합니다! 틀에 들어간 조각을 누르면 다시 보관함으로 나옵니다.</span>
+          <!-- Quick Interactive Tip -->
+          <div class="mt-2.5 p-2 bg-blue-50/70 border border-blue-100 rounded-lg flex items-center justify-between text-[11px] text-blue-800">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-blue-600 shrink-0"></i>
+              <span><strong>조작 팁:</strong> 직사각형의 <strong>[🔄 회전]</strong> 버튼을 누르면 가로세로가 90도 회전합니다!</span>
+            </div>
           </div>
         </div>
 
-        <!-- Right: Target Frame (완성할 큰 정사각형 틀) -->
-        <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col items-center">
-          <div class="w-full flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-            <div class="flex items-center space-x-2">
-              <i data-lucide="target" class="w-5 h-5 text-indigo-600"></i>
-              <h3 class="font-bold text-slate-800 text-sm sm:text-base">
-                목표 틀: 한 변이 <span class="text-indigo-600 font-extrabold">(a + b)</span>인 정사각형
+        <!-- Right: Target Frame (완성할 정사각형 틀) -->
+        <div class="lg:col-span-7 bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-2xs flex flex-col items-center">
+          <div class="w-full flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+            <div class="flex items-center space-x-1.5">
+              <i data-lucide="target" class="w-4 h-4 text-indigo-600"></i>
+              <h3 class="font-bold text-slate-800 text-xs sm:text-sm">
+                목표 틀: 한 변의 길이가 <span class="text-indigo-600 font-extrabold">(a + b)</span>인 정사각형
               </h3>
             </div>
-            <div id="placementBadge" class="text-xs font-bold px-3 py-1 bg-slate-100 text-slate-600 rounded-full">
-              0 / 4 조각 조립됨
+            <div id="placementBadge" class="text-xs font-bold px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-full">
+              0 / 4 조립됨
             </div>
           </div>
 
           <!-- Target Square Board Container -->
-          <div class="w-full flex flex-col items-center justify-center py-4 select-none">
+          <div class="w-full flex flex-col items-center justify-center py-2 select-none">
             
             <!-- Dimension Label Top -->
-            <div class="mb-2 flex items-center justify-center gap-2 text-xs font-bold text-slate-500">
+            <div class="mb-1 flex items-center justify-center gap-1.5 text-xs font-bold text-slate-500">
               <span class="text-indigo-600">a (<span id="dimTopA">4</span>)</span>
               <span>+</span>
               <span class="text-amber-600">b (<span id="dimTopB">2</span>)</span>
               <span>=</span>
-              <span class="font-black text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-lg border border-slate-200">
+              <span class="font-black text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-xs">
                 전체 가로: <span id="dimTopTotal">6</span>
               </span>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
               <!-- Dimension Label Left -->
-              <div class="flex flex-col items-center justify-center text-xs font-bold text-slate-500 pr-1">
+              <div class="flex flex-col items-center justify-center text-xs font-bold text-slate-500 pr-0.5">
                 <span class="text-indigo-600">a</span>
                 <span class="my-0.5 text-[10px]">+</span>
                 <span class="text-amber-600">b</span>
-                <span class="mt-1 text-[10px] text-slate-400">↕</span>
+                <span class="mt-0.5 text-[10px] text-slate-400">↕</span>
               </div>
 
-              <!-- Big Target Frame Drop Container -->
-              <div id="targetFrame" class="relative bg-slate-100 border-3 border-dashed border-indigo-300 rounded-2xl shadow-inner transition-all flex flex-wrap overflow-hidden" style="width: 320px; height: 320px;">
+              <!-- Target Frame Drop Container -->
+              <div id="targetFrame" class="relative bg-slate-100 border-2 border-dashed border-indigo-300 rounded-xl shadow-inner transition-all flex flex-wrap overflow-hidden" style="width: 280px; height: 280px;">
                 <!-- 4 Snap Zones -->
-                <div id="slot-a2" data-slot="a2" class="snap-target absolute top-0 left-0 border border-dashed border-indigo-300 bg-indigo-50/40 rounded-tl-xl flex items-center justify-center text-xs text-indigo-400 font-bold overflow-hidden">
-                  <span class="slot-placeholder">a² 자리</span>
+                <div id="slot-a2" data-slot="a2" class="snap-target absolute top-0 left-0 border border-dashed border-indigo-300 bg-indigo-50/40 rounded-tl-lg flex items-center justify-center text-xs text-indigo-400 font-bold overflow-hidden">
+                  <span class="slot-placeholder">a²</span>
                 </div>
-                <div id="slot-ab1" data-slot="ab1" class="snap-target absolute top-0 border border-dashed border-teal-300 bg-teal-50/40 rounded-tr-xl flex items-center justify-center text-xs text-teal-500 font-bold overflow-hidden">
-                  <span class="slot-placeholder">ba (ab) 자리</span>
+                <div id="slot-ab1" data-slot="ab1" class="snap-target absolute top-0 border border-dashed border-teal-300 bg-teal-50/40 rounded-tr-lg flex items-center justify-center text-xs text-teal-500 font-bold overflow-hidden">
+                  <span class="slot-placeholder">ba</span>
                 </div>
-                <div id="slot-ab2" data-slot="ab2" class="snap-target absolute left-0 border border-dashed border-sky-300 bg-sky-50/40 rounded-bl-xl flex items-center justify-center text-xs text-sky-500 font-bold overflow-hidden">
-                  <span class="slot-placeholder">ab 자리</span>
+                <div id="slot-ab2" data-slot="ab2" class="snap-target absolute left-0 border border-dashed border-sky-300 bg-sky-50/40 rounded-bl-lg flex items-center justify-center text-xs text-sky-500 font-bold overflow-hidden">
+                  <span class="slot-placeholder">ab</span>
                 </div>
-                <div id="slot-b2" data-slot="b2" class="snap-target absolute border border-dashed border-amber-300 bg-amber-50/40 rounded-br-xl flex items-center justify-center text-xs text-amber-500 font-bold overflow-hidden">
-                  <span class="slot-placeholder">b² 자리</span>
+                <div id="slot-b2" data-slot="b2" class="snap-target absolute border border-dashed border-amber-300 bg-amber-50/40 rounded-br-lg flex items-center justify-center text-xs text-amber-500 font-bold overflow-hidden">
+                  <span class="slot-placeholder">b²</span>
                 </div>
               </div>
             </div>
 
             <!-- Dimension Label Bottom -->
-            <div class="mt-3 text-xs text-slate-500 font-medium flex items-center gap-2">
+            <div class="mt-2 text-xs text-slate-500 font-medium flex items-center gap-1.5">
               <span>목표 넓이:</span>
-              <span class="font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-lg border border-indigo-100 font-mono">
+              <span class="font-extrabold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100 font-mono text-xs">
                 (a + b)² = (<span id="summarySumA">4</span> + <span id="summarySumB">2</span>)² = <span id="summarySumTotal">36</span>
               </span>
             </div>
           </div>
 
           <!-- Misconception Warning Banner -->
-          <div id="misconceptionBanner" class="hidden w-full mt-4 p-4 bg-amber-50 border-2 border-amber-400 rounded-2xl transition-all">
-            <div class="flex items-start gap-3">
-              <div class="p-2.5 bg-amber-500 text-white rounded-xl shrink-0">
-                <i data-lucide="help-circle" class="w-5 h-5"></i>
+          <div id="misconceptionBanner" class="hidden w-full mt-2 p-3 bg-amber-50 border-2 border-amber-400 rounded-xl transition-all">
+            <div class="flex items-start gap-2.5">
+              <div class="p-1.5 bg-amber-500 text-white rounded-lg shrink-0">
+                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
               </div>
-              <div class="flex-1 text-xs sm:text-sm text-amber-950">
-                <h4 class="font-black text-amber-950 text-sm mb-1">🚨 중학생 대표 오개념: "(a+b)² = a² + b²" 은 왜 틀렸을까요?</h4>
+              <div class="flex-1 text-xs text-amber-950">
+                <h4 class="font-black text-amber-950 text-xs mb-0.5">🚨 오개념 발견: "(a+b)² = a² + b²" 은 왜 거짓일까요?</h4>
                 <p class="leading-relaxed">
-                  지금 틀 안을 보세요! <strong class="text-mathA2 font-bold">a²</strong>과 <strong class="text-mathB2 font-bold">b²</strong>만 넣으면 
-                  <strong>두 개의 직사각형 구멍(2ab)</strong>이 텅 비어 있습니다!
-                  따라서 완전한 정사각형이 되려면 반드시 <strong>2ab</strong>가 더해져야 합니다.
+                  틀 안을 보세요! <strong class="text-mathA2 font-bold">a²</strong>과 <strong class="text-mathB2 font-bold">b²</strong>만 넣으면 
+                  <strong>두 개의 직사각형 구멍(2ab)</strong>이 텅 비어버립니다! 완전한 정사각형이 되려면 반드시 <strong>2ab</strong>가 더해져야 합니다.
                 </p>
-                <div class="mt-2.5 flex items-center gap-2">
-                  <button onclick="fillMissingTerms()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs transition-colors shadow-xs">
-                    빈 곳에 2개의 직사각형(2ab) 채우기 →
+                <div class="mt-1.5">
+                  <button onclick="fillMissingTerms()" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-xs transition-colors shadow-2xs">
+                    빈 곳에 직사각형 2개(2ab) 채우기 →
                   </button>
                 </div>
               </div>
@@ -433,22 +371,22 @@
           </div>
 
           <!-- Stage 1 Success Card -->
-          <div id="stage1SuccessCard" class="hidden w-full mt-4 p-4 bg-emerald-50 border-2 border-emerald-400 rounded-2xl transition-all animate-gentle-pulse">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md">
-                  <i data-lucide="check" class="w-6 h-6"></i>
+          <div id="stage1SuccessCard" class="hidden w-full mt-2 p-3 bg-emerald-50 border-2 border-emerald-400 rounded-xl transition-all">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <i data-lucide="check" class="w-4 h-4"></i>
                 </div>
                 <div>
-                  <h4 class="font-black text-emerald-950 text-sm sm:text-base">🎉 정사각형 (a+b)²이 빈틈없이 완성되었습니다!</h4>
-                  <p class="text-xs text-emerald-800 mt-0.5">
-                    손으로 만져보니 <strong class="font-bold">a² 1개 + ab 2개 + b² 1개</strong>의 합이라는 것이 확실히 느껴지시죠?
+                  <h4 class="font-black text-emerald-950 text-xs sm:text-sm">🎉 정사각형 (a+b)² 완성!</h4>
+                  <p class="text-[11px] text-emerald-800">
+                    <strong class="font-bold">a² 1개 + ab 2개 + b² 1개</strong>가 모여 빈틈없이 채워졌습니다!
                   </p>
                 </div>
               </div>
-              <button onclick="switchStage(2)" class="shrink-0 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-black rounded-xl shadow-md transition-all flex items-center gap-1.5">
-                <span>2단계: 영상적 표상으로 넘어가기</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <button onclick="switchStage(2)" class="shrink-0 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-lg shadow-xs transition-all flex items-center gap-1">
+                <span>2단계: 넓이 구조 분석하기</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </button>
             </div>
           </div>
@@ -459,169 +397,122 @@
 
 
     <!-- ======================================================================= -->
-    <!-- STAGE 2: ICONIC (영상적 표상 - 시각적 심상)                             -->
+    <!-- STAGE 2: 넓이 도해 분석 (시각적 심상 & 분해 뷰 & 단위 격자)              -->
     <!-- ======================================================================= -->
     <section id="stage2View" class="stage-section hidden">
-      <!-- Pedagogical Guide Banner -->
-      <div class="bg-gradient-to-r from-teal-500/10 via-sky-500/10 to-indigo-500/10 border border-teal-100 rounded-2xl p-4 sm:p-5 mb-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="flex items-start space-x-3.5">
-            <div class="p-3 bg-teal-600 text-white rounded-xl shadow-xs shrink-0">
-              <i data-lucide="eye" class="w-6 h-6"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-[11px] font-black uppercase px-2 py-0.5 bg-teal-100 text-teal-700 rounded-md">영상적 표상 단계</span>
-                <h2 class="text-base sm:text-lg font-black text-slate-900">시각적 심상과 기하학적 넓이 도해로 구조 파악하기</h2>
-              </div>
-              <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                실물 블록이 없어도 머릿속으로 기하학적 구조를 선명하게 그리는 단계입니다. 분해 뷰와 격자 눈금으로 4개 영역의 관계를 탐색하세요.
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <button id="explodeToggleBtn" onclick="toggleExplodedView()" class="text-xs sm:text-sm font-bold bg-teal-600 hover:bg-teal-700 text-white px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-1.5 shadow-xs">
-              <i data-lucide="split" class="w-4 h-4"></i>
-              <span id="explodeBtnText">조각 분해하여 보기</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Controls & View Mode Selectors -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 mb-6 shadow-xs">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+      
+      <!-- Compact Controls Bar -->
+      <div class="bg-white border border-slate-200 rounded-xl p-2.5 sm:p-3 mb-3 shadow-2xs">
+        <div class="flex flex-wrap items-center justify-between gap-2.5">
           
-          <!-- Slider A -->
-          <div class="md:col-span-3 bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-bold text-slate-700">길이 a 조절</span>
-              <span id="labelA_stage2" class="text-xs font-black text-indigo-700 font-mono">a = 4</span>
+          <!-- Sliders A & B -->
+          <div class="flex items-center gap-3 sm:gap-6 flex-wrap">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-700">a:</span>
+              <input type="range" id="sliderA_stage2" min="2" max="6" value="4" step="1" 
+                     class="w-20 sm:w-28 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+              <span id="labelA_stage2" class="text-xs font-black text-indigo-700 font-mono">4</span>
             </div>
-            <input type="range" id="sliderA_stage2" min="2" max="6" value="4" step="1" 
-                   class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
-          </div>
-
-          <!-- Slider B -->
-          <div class="md:col-span-3 bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-bold text-slate-700">길이 b 조절</span>
-              <span id="labelB_stage2" class="text-xs font-black text-amber-700 font-mono">b = 2</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-700">b:</span>
+              <input type="range" id="sliderB_stage2" min="1" max="5" value="2" step="1" 
+                     class="w-20 sm:w-28 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+              <span id="labelB_stage2" class="text-xs font-black text-amber-700 font-mono">2</span>
             </div>
-            <input type="range" id="sliderB_stage2" min="1" max="5" value="2" step="1" 
-                   class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
           </div>
 
           <!-- Feature Toggles & Presets -->
-          <div class="md:col-span-6 flex flex-wrap items-center gap-3 justify-end">
-            <!-- Grid Toggle -->
-            <label class="cursor-pointer flex items-center gap-2 px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-colors">
-              <input type="checkbox" id="toggleGridCheckbox" onchange="renderStage2Diagram()" class="rounded text-teal-600 focus:ring-teal-500 w-4 h-4" checked>
-              <span>단위 격자 (1×1 눈금) 보기</span>
+          <div class="flex items-center gap-2 flex-wrap">
+            <label class="cursor-pointer flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-700">
+              <input type="checkbox" id="toggleGridCheckbox" onchange="renderStage2Diagram()" class="rounded text-teal-600 w-3.5 h-3.5" checked>
+              <span>격자 눈금</span>
             </label>
 
+            <button id="explodeToggleBtn" onclick="toggleExplodedView()" class="text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 shadow-2xs">
+              <i data-lucide="split" class="w-3.5 h-3.5"></i>
+              <span id="explodeBtnText">조각 분해하여 보기</span>
+            </button>
+
             <!-- Presets -->
-            <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
-              <span class="text-[10px] font-bold text-slate-400 px-1">추천 비율:</span>
-              <button onclick="setPresets(4, 2)" class="text-xs px-2 py-1 bg-white hover:bg-slate-50 rounded-lg font-bold text-slate-700 shadow-xs">4 : 2 (황금비)</button>
-              <button onclick="setPresets(3, 3)" class="text-xs px-2 py-1 bg-white hover:bg-slate-50 rounded-lg font-bold text-slate-700 shadow-xs">3 : 3 (대칭)</button>
-              <button onclick="setPresets(5, 1)" class="text-xs px-2 py-1 bg-white hover:bg-slate-50 rounded-lg font-bold text-slate-700 shadow-xs">5 : 1 (극단비)</button>
+            <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-xs">
+              <button onclick="setPresets(4, 2)" class="px-2 py-1 bg-white hover:bg-slate-50 rounded font-bold text-slate-700 shadow-2xs">4:2</button>
+              <button onclick="setPresets(3, 3)" class="px-2 py-1 bg-white hover:bg-slate-50 rounded font-bold text-slate-700 shadow-2xs">3:3(대칭)</button>
+              <button onclick="setPresets(5, 1)" class="px-2 py-1 bg-white hover:bg-slate-50 rounded font-bold text-slate-700 shadow-2xs">5:1</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Stage 2 Main Visualizer -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Stage 2 Main Visualizer Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 items-start">
         
-        <!-- Left: Interactive Geometric Canvas -->
-        <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col items-center">
-          <div class="w-full flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-            <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-              <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
+        <!-- Left: Geometric Canvas -->
+        <div class="lg:col-span-7 bg-white border border-slate-200 rounded-xl p-4 shadow-2xs flex flex-col items-center">
+          <div class="w-full flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+            <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="layout-grid" class="w-4 h-4 text-teal-600"></i>
               기하학적 면적 분할 도해
             </h3>
-            <span class="text-xs text-teal-700 bg-teal-50 font-bold px-2.5 py-1 rounded-full border border-teal-100">
-              각 영역을 클릭하거나 마우스를 올려보세요
+            <span class="text-[11px] text-teal-700 bg-teal-50 font-bold px-2 py-0.5 rounded-full border border-teal-100">
+              영역을 클릭하여 세부 넓이 확인
             </span>
           </div>
 
           <!-- Dynamic SVG/HTML Canvas -->
-          <div class="w-full flex justify-center items-center py-4 relative min-h-[420px] select-none overflow-x-auto">
+          <div class="w-full flex justify-center items-center py-2 relative min-h-[320px] select-none overflow-x-auto">
             <div id="iconicDiagramContainer" class="relative transition-all duration-300">
               <!-- Dynamically populated via renderStage2Diagram() -->
             </div>
           </div>
 
           <!-- Bottom Proportional Bar -->
-          <div class="w-full mt-4 pt-4 border-t border-slate-100">
-            <div class="flex items-center justify-between text-xs font-bold text-slate-600 mb-2">
+          <div class="w-full mt-2 pt-2 border-t border-slate-100">
+            <div class="flex items-center justify-between text-xs font-bold text-slate-600 mb-1.5">
               <span>면적 구성 비율 (%)</span>
-              <span id="ratioBarSummary" class="text-slate-800 font-mono">합계: 100%</span>
+              <span id="ratioBarSummary" class="text-slate-800 font-mono text-[11px]">합계: 100%</span>
             </div>
-            <div class="w-full h-4 rounded-full overflow-hidden flex shadow-inner bg-slate-100">
-              <div id="barA2" class="h-full bg-mathA2 transition-all duration-300 flex items-center justify-center text-[10px] text-white font-extrabold" title="a²"></div>
-              <div id="barAB1" class="h-full bg-mathAB transition-all duration-300 flex items-center justify-center text-[10px] text-white font-extrabold" title="ba"></div>
-              <div id="barAB2" class="h-full bg-mathBA transition-all duration-300 flex items-center justify-center text-[10px] text-white font-extrabold" title="ab"></div>
-              <div id="barB2" class="h-full bg-mathB2 transition-all duration-300 flex items-center justify-center text-[10px] text-white font-extrabold" title="b²"></div>
-            </div>
-            <div class="flex justify-between items-center text-[11px] font-bold mt-2 text-slate-500">
-              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-mathA2"></span> a²</span>
-              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-mathAB"></span> ba (ab)</span>
-              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-mathBA"></span> ab</span>
-              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-mathB2"></span> b²</span>
+            <div class="w-full h-3 rounded-full overflow-hidden flex shadow-inner bg-slate-100">
+              <div id="barA2" class="h-full bg-mathA2 transition-all duration-300 flex items-center justify-center text-[9px] text-white font-extrabold" title="a²"></div>
+              <div id="barAB1" class="h-full bg-mathAB transition-all duration-300 flex items-center justify-center text-[9px] text-white font-extrabold" title="ba"></div>
+              <div id="barAB2" class="h-full bg-mathBA transition-all duration-300 flex items-center justify-center text-[9px] text-white font-extrabold" title="ab"></div>
+              <div id="barB2" class="h-full bg-mathB2 transition-all duration-300 flex items-center justify-center text-[9px] text-white font-extrabold" title="b²"></div>
             </div>
           </div>
         </div>
 
         <!-- Right: Inspector & Area Breakdown Cards -->
-        <div class="lg:col-span-5 flex flex-col gap-5">
+        <div class="lg:col-span-5 flex flex-col gap-3">
           
           <!-- Selected Region Inspector Box -->
-          <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-xs transition-all" id="regionInspectorBox">
-            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-              <div class="flex items-center gap-2">
-                <span id="inspectorColorBadge" class="w-3.5 h-3.5 rounded-md bg-indigo-600"></span>
-                <h4 id="inspectorTitle" class="font-bold text-slate-900 text-sm sm:text-base">영역별 심층 분석</h4>
+          <div class="bg-white border-2 border-slate-200 rounded-xl p-3 shadow-2xs transition-all" id="regionInspectorBox">
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+              <div class="flex items-center gap-1.5">
+                <span id="inspectorColorBadge" class="w-3 h-3 rounded bg-indigo-600"></span>
+                <h4 id="inspectorTitle" class="font-bold text-slate-900 text-xs sm:text-sm">영역 분석</h4>
               </div>
-              <span id="inspectorCategory" class="text-xs font-extrabold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">상세 정보</span>
+              <span id="inspectorCategory" class="text-[10px] font-extrabold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">상세 정보</span>
             </div>
 
-            <div id="inspectorContent" class="space-y-3">
-              <p class="text-xs sm:text-sm text-slate-600">
-                도해의 4개 영역 중 하나를 선택하면, <strong>가로 × 세로</strong> 수식과 넓이 계산이 집중 표시됩니다.
+            <div id="inspectorContent" class="space-y-2 text-xs">
+              <p class="text-slate-600">
+                도해의 4개 영역 중 하나를 누르면 가로, 세로, 넓이 공식이 집중 표시됩니다.
               </p>
-              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-xs text-slate-700 space-y-1.5 font-medium">
-                <div class="flex justify-between">
-                  <span>전체 가로:</span>
-                  <span class="font-bold text-slate-900 font-mono"><span id="inspectWidthA">4</span> + <span id="inspectWidthB">2</span> = <span id="inspectWidthTotal">6</span></span>
-                </div>
-                <div class="flex justify-between">
-                  <span>전체 세로:</span>
-                  <span class="font-bold text-slate-900 font-mono"><span id="inspectHeightA">4</span> + <span id="inspectHeightB">2</span> = <span id="inspectHeightTotal">6</span></span>
-                </div>
-                <div class="flex justify-between pt-1 border-t border-slate-200 font-bold text-indigo-700">
-                  <span>전체 큰 정사각형 넓이:</span>
-                  <span class="font-mono">(6)² = 36</span>
-                </div>
-              </div>
             </div>
           </div>
 
           <!-- 4 Areas Summary Cards -->
-          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
-            <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center justify-between">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-2xs">
+            <h4 class="font-bold text-slate-900 text-xs mb-2 flex items-center justify-between">
               <span>네 영역의 분할 합계</span>
-              <span class="text-xs font-normal text-slate-500">4개 조각의 합</span>
+              <span class="text-[11px] font-normal text-slate-500">4개 조각의 합</span>
             </h4>
 
-            <div class="space-y-2 text-xs sm:text-sm">
+            <div class="space-y-1.5 text-xs">
               <!-- Item 1: a^2 -->
-              <div id="card-region-a2" onmouseenter="highlightRegion('a2')" onmouseleave="resetHighlight()" onclick="highlightRegion('a2')" class="p-2.5 rounded-xl border border-indigo-100 bg-indigo-50/50 flex items-center justify-between transition-all cursor-pointer hover:bg-indigo-100/70">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-3.5 h-3.5 rounded bg-mathA2 shrink-0"></span>
-                  <span class="font-bold text-slate-800">1. 좌상단 큰 정사각형</span>
-                  <span class="text-slate-500 text-xs">(a × a)</span>
+              <div id="card-region-a2" onclick="highlightRegion('a2')" class="p-2 rounded-lg border border-indigo-100 bg-indigo-50/50 flex items-center justify-between cursor-pointer hover:bg-indigo-100/70">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded bg-mathA2 shrink-0"></span>
+                  <span class="font-bold text-slate-800">1. 큰 정사각형 (a × a)</span>
                 </div>
                 <div class="font-extrabold text-indigo-700 font-mono">
                   a² = <span id="valA2">16</span>
@@ -629,11 +520,10 @@
               </div>
 
               <!-- Item 2: ba -->
-              <div id="card-region-ab1" onmouseenter="highlightRegion('ab1')" onmouseleave="resetHighlight()" onclick="highlightRegion('ab1')" class="p-2.5 rounded-xl border border-teal-100 bg-teal-50/50 flex items-center justify-between transition-all cursor-pointer hover:bg-teal-100/70">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-3.5 h-3.5 rounded bg-mathAB shrink-0"></span>
-                  <span class="font-bold text-slate-800">2. 우상단 세로 직사각형</span>
-                  <span class="text-slate-500 text-xs">(b × a)</span>
+              <div id="card-region-ab1" onclick="highlightRegion('ab1')" class="p-2 rounded-lg border border-teal-100 bg-teal-50/50 flex items-center justify-between cursor-pointer hover:bg-teal-100/70">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded bg-mathAB shrink-0"></span>
+                  <span class="font-bold text-slate-800">2. 세로 직사각형 (b × a)</span>
                 </div>
                 <div class="font-extrabold text-teal-700 font-mono">
                   ba = <span id="valAB1">8</span>
@@ -641,11 +531,10 @@
               </div>
 
               <!-- Item 3: ab -->
-              <div id="card-region-ab2" onmouseenter="highlightRegion('ab2')" onmouseleave="resetHighlight()" onclick="highlightRegion('ab2')" class="p-2.5 rounded-xl border border-sky-100 bg-sky-50/50 flex items-center justify-between transition-all cursor-pointer hover:bg-sky-100/70">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-3.5 h-3.5 rounded bg-mathBA shrink-0"></span>
-                  <span class="font-bold text-slate-800">3. 좌하단 가로 직사각형</span>
-                  <span class="text-slate-500 text-xs">(a × b)</span>
+              <div id="card-region-ab2" onclick="highlightRegion('ab2')" class="p-2 rounded-lg border border-sky-100 bg-sky-50/50 flex items-center justify-between cursor-pointer hover:bg-sky-100/70">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded bg-mathBA shrink-0"></span>
+                  <span class="font-bold text-slate-800">3. 가로 직사각형 (a × b)</span>
                 </div>
                 <div class="font-extrabold text-sky-700 font-mono">
                   ab = <span id="valAB2">8</span>
@@ -653,11 +542,10 @@
               </div>
 
               <!-- Item 4: b^2 -->
-              <div id="card-region-b2" onmouseenter="highlightRegion('b2')" onmouseleave="resetHighlight()" onclick="highlightRegion('b2')" class="p-2.5 rounded-xl border border-amber-100 bg-amber-50/50 flex items-center justify-between transition-all cursor-pointer hover:bg-amber-100/70">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-3.5 h-3.5 rounded bg-mathB2 shrink-0"></span>
-                  <span class="font-bold text-slate-800">4. 우하단 작은 정사각형</span>
-                  <span class="text-slate-500 text-xs">(b × b)</span>
+              <div id="card-region-b2" onclick="highlightRegion('b2')" class="p-2 rounded-lg border border-amber-100 bg-amber-50/50 flex items-center justify-between cursor-pointer hover:bg-amber-100/70">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded bg-mathB2 shrink-0"></span>
+                  <span class="font-bold text-slate-800">4. 작은 정사각형 (b × b)</span>
                 </div>
                 <div class="font-extrabold text-amber-700 font-mono">
                   b² = <span id="valB2">4</span>
@@ -665,23 +553,20 @@
               </div>
             </div>
 
-            <!-- Total Equation Display -->
-            <div class="mt-4 pt-3 border-t border-slate-200">
-              <div class="p-3 bg-slate-900 text-white rounded-xl text-center">
-                <span class="text-xs text-slate-400 block mb-1">기하학적 전체 면적 합</span>
-                <div class="text-sm sm:text-base font-extrabold font-mono">
-                  <span class="text-indigo-400">a²</span> + 
-                  <span class="text-teal-400">2ab</span> + 
-                  <span class="text-amber-400">b²</span> = 
-                  <span id="valTotalFormulaSum" class="text-emerald-400 font-black">36</span>
-                </div>
+            <!-- Total Formula Badge -->
+            <div class="mt-2.5 pt-2 border-t border-slate-200">
+              <div class="p-2 bg-slate-900 text-white rounded-lg text-center font-mono text-xs">
+                <span class="text-indigo-400 font-bold">a²</span> + 
+                <span class="text-teal-400 font-bold">2ab</span> + 
+                <span class="text-amber-400 font-bold">b²</span> = 
+                <span id="valTotalFormulaSum" class="text-emerald-400 font-black">36</span>
               </div>
             </div>
 
-            <!-- Transition to Stage 3 Button -->
-            <button onclick="switchStage(3)" class="mt-4 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5">
-              <span>3단계: 대수적 기호 공식으로 일반화하기</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <!-- Next button -->
+            <button onclick="switchStage(3)" class="mt-2.5 w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-2xs transition-all flex items-center justify-center gap-1">
+              <span>3단계: 공식 & 도전 챌린지 풀기</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
             </button>
           </div>
 
@@ -691,394 +576,276 @@
 
 
     <!-- ======================================================================= -->
-    <!-- STAGE 3: SYMBOLIC (기호적 표상 - 추상적 기호와 대수학 공식)              -->
+    <!-- STAGE 3: 공식 & 심화 챌린지 (대수 증명 + 계수 확장 + 스피드 게임 + 퀴즈)   -->
     <!-- ======================================================================= -->
-    <section id="stage3View" class="stage-section hidden">
-      <!-- Pedagogical Guide Banner -->
-      <div class="bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-blue-500/10 border border-purple-100 rounded-2xl p-4 sm:p-5 mb-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="flex items-start space-x-3.5">
-            <div class="p-3 bg-purple-600 text-white rounded-xl shadow-xs shrink-0">
-              <i data-lucide="binary" class="w-6 h-6"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-[11px] font-black uppercase px-2 py-0.5 bg-purple-100 text-purple-700 rounded-md">기호적 표상 단계</span>
-                <h2 class="text-base sm:text-lg font-black text-slate-900">추상적 기호와 수식으로 곱셈 공식 일반화하기</h2>
-              </div>
-              <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                도형 없이도 논리적 기호 <strong class="text-purple-700 font-mono">(a+b)² = a² + 2ab + b²</strong>로 자유롭게 사고를 확장하고 실생활 암산에 응용합니다.
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <span class="text-xs font-bold bg-white text-purple-800 border border-purple-200 px-3.5 py-2.5 rounded-xl shadow-xs flex items-center gap-1.5">
-              <i data-lucide="check-check" class="w-4 h-4 text-purple-600"></i>
-              <span>완전한 대수적 형식화</span>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Main Stage 3 Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <section id="stage3View" class="stage-section hidden space-y-4">
+      
+      <!-- Top Section: Algebraic Proof & Live Evaluator -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 items-start">
         
-        <!-- Left: Algebraic Proof & Live Evaluator -->
-        <div class="lg:col-span-7 space-y-6">
-          
-          <!-- Card 1: Step-by-Step Algebraic Derivation -->
-          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
-            <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-              <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-                <i data-lucide="git-commit" class="w-5 h-5 text-purple-600"></i>
-                분배법칙을 통한 단계별 대수 전개 증명
-              </h3>
-              <span class="text-xs text-slate-400">기하학적 블록과 1:1 대응</span>
+        <!-- Left: Algebraic 5-Step Proof -->
+        <div class="lg:col-span-6 bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+          <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-100">
+            <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="git-commit" class="w-4 h-4 text-purple-600"></i>
+              분배법칙을 통한 단계별 대수 전개
+            </h3>
+            <span class="text-[11px] text-slate-400">4개 조각과 1:1 대응</span>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div class="p-2 rounded-lg border border-slate-200 bg-slate-50/50 flex items-start gap-2">
+              <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">1</span>
+              <div>
+                <div class="text-[10px] text-slate-500 font-semibold">정사각형 넓이 정의 (거듭제곱)</div>
+                <div class="font-bold text-slate-900 font-mono">(a + b)² = (a + b)(a + b)</div>
+              </div>
             </div>
 
-            <!-- Steps list -->
-            <div class="space-y-3">
-              <!-- Step 1 -->
-              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-start gap-3">
-                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-black flex items-center justify-center shrink-0 mt-0.5">1</span>
-                <div>
-                  <div class="text-xs text-slate-500 font-semibold mb-0.5">정사각형 넓이의 정의 (거듭제곱)</div>
-                  <div class="text-sm sm:text-base font-bold text-slate-900 font-mono">
-                    (a + b)² = (a + b)(a + b)
-                  </div>
-                </div>
+            <div class="p-2 rounded-lg border border-slate-200 bg-slate-50/50 flex items-start gap-2">
+              <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">2</span>
+              <div>
+                <div class="text-[10px] text-slate-500 font-semibold">분배법칙 적용</div>
+                <div class="font-bold text-slate-900 font-mono">= <span class="text-indigo-600">a</span>(a + b) + <span class="text-amber-600">b</span>(a + b)</div>
               </div>
+            </div>
 
-              <!-- Step 2 -->
-              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-start gap-3">
-                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-black flex items-center justify-center shrink-0 mt-0.5">2</span>
-                <div>
-                  <div class="text-xs text-slate-500 font-semibold mb-0.5">첫 번째 괄호의 항들을 두 번째 괄호에 분배 (분배법칙)</div>
-                  <div class="text-sm sm:text-base font-bold text-slate-900 font-mono">
-                    = <span class="text-indigo-600">a</span>(a + b) + <span class="text-amber-600">b</span>(a + b)
-                  </div>
-                </div>
+            <div class="p-2 rounded-lg border border-slate-200 bg-slate-50/50 flex items-start gap-2">
+              <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">3</span>
+              <div>
+                <div class="text-[10px] text-slate-500 font-semibold">4개 조각으로 전개</div>
+                <div class="font-bold text-slate-900 font-mono">= <span class="text-indigo-600">a·a</span> + <span class="text-teal-600">a·b</span> + <span class="text-sky-600">b·a</span> + <span class="text-amber-600">b·b</span></div>
               </div>
+            </div>
 
-              <!-- Step 3 -->
-              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-start gap-3">
-                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-black flex items-center justify-center shrink-0 mt-0.5">3</span>
-                <div>
-                  <div class="text-xs text-slate-500 font-semibold mb-0.5">각 괄호를 전개하여 4개의 단항식으로 분해 (블록 4개)</div>
-                  <div class="text-sm sm:text-base font-bold text-slate-900 font-mono">
-                    = <span class="text-indigo-600">a·a</span> + <span class="text-teal-600">a·b</span> + <span class="text-sky-600">b·a</span> + <span class="text-amber-600">b·b</span>
-                  </div>
-                </div>
+            <div class="p-2 rounded-lg border border-slate-200 bg-slate-50/50 flex items-start gap-2">
+              <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">4</span>
+              <div>
+                <div class="text-[10px] text-slate-500 font-semibold">곱셈의 교환법칙 (ba = ab)</div>
+                <div class="font-bold text-slate-900 font-mono">= <span class="text-indigo-600">a²</span> + <span class="text-teal-600">ab</span> + <span class="text-sky-600">ab</span> + <span class="text-amber-600">b²</span></div>
               </div>
+            </div>
 
-              <!-- Step 4 -->
-              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-start gap-3">
-                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-black flex items-center justify-center shrink-0 mt-0.5">4</span>
-                <div>
-                  <div class="text-xs text-slate-500 font-semibold mb-0.5">곱셈의 교환법칙 적용 (b·a = a·b)</div>
-                  <div class="text-sm sm:text-base font-bold text-slate-900 font-mono">
-                    = <span class="text-indigo-600">a²</span> + <span class="text-teal-600">ab</span> + <span class="text-sky-600">ab</span> + <span class="text-amber-600">b²</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Step 5 -->
-              <div class="p-4 rounded-xl border-2 border-indigo-500 bg-indigo-50/80 flex items-start gap-3 shadow-xs">
-                <span class="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">5</span>
-                <div class="w-full">
-                  <div class="text-xs text-indigo-700 font-bold mb-0.5">동류항 정리: ab + ab = 2ab (최종 공식 완성!)</div>
-                  <div class="text-base sm:text-xl font-black text-indigo-950 font-mono">
-                    (a + b)² = <span class="text-mathA2">a²</span> + <span class="text-teal-600">2ab</span> + <span class="text-mathB2">b²</span>
-                  </div>
-                </div>
+            <div class="p-2.5 rounded-lg border-2 border-indigo-500 bg-indigo-50/80 flex items-start gap-2">
+              <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">5</span>
+              <div>
+                <div class="text-[10px] text-indigo-700 font-bold">동류항 정리: ab + ab = 2ab (최종 완성!)</div>
+                <div class="font-black text-indigo-950 font-mono text-sm">(a + b)² = <span class="text-mathA2">a²</span> + <span class="text-teal-600">2ab</span> + <span class="text-mathB2">b²</span></div>
               </div>
             </div>
           </div>
-
-          <!-- Card 2: Live Evaluator (동치성 실시간 검증기) -->
-          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
-            <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-              <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-                <i data-lucide="calculator" class="w-5 h-5 text-indigo-600"></i>
-                실시간 수치 동기화 계산기 (좌변 = 우변 검증)
-              </h3>
-              <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">
-                항등식 검증 완료
-              </span>
-            </div>
-
-            <!-- Sliders -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                <div class="flex justify-between items-center mb-1">
-                  <span class="text-xs font-bold text-slate-700">숫자 a 대입</span>
-                  <span id="labelA_stage3" class="text-xs font-black text-indigo-700 font-mono">a = 4</span>
-                </div>
-                <input type="range" id="sliderA_stage3" min="1" max="15" value="4" step="1" 
-                       class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
-              </div>
-
-              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                <div class="flex justify-between items-center mb-1">
-                  <span class="text-xs font-bold text-slate-700">숫자 b 대입</span>
-                  <span id="labelB_stage3" class="text-xs font-black text-amber-700 font-mono">b = 2</span>
-                </div>
-                <input type="range" id="sliderB_stage3" min="1" max="15" value="2" step="1" 
-                       class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
-              </div>
-            </div>
-
-            <!-- Side-by-side verification block -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- LHS: (a+b)^2 -->
-              <div class="p-4 bg-indigo-50/60 border border-indigo-100 rounded-xl text-center">
-                <span class="text-xs text-indigo-600 font-bold uppercase tracking-wider block mb-1">좌변 (LHS) : 거듭제곱</span>
-                <div class="text-xs text-slate-500 font-mono mb-1">
-                  (<span id="calcA_lhs">4</span> + <span id="calcB_lhs">2</span>)²
-                </div>
-                <div class="text-xs text-slate-500 font-mono mb-2">
-                  = (<span id="calcSum_lhs">6</span>)²
-                </div>
-                <div class="text-2xl font-black text-indigo-700 font-mono">
-                  <span id="calcFinal_lhs">36</span>
-                </div>
-              </div>
-
-              <!-- RHS: a^2 + 2ab + b^2 -->
-              <div class="p-4 bg-emerald-50/60 border border-emerald-100 rounded-xl text-center">
-                <span class="text-xs text-emerald-600 font-bold uppercase tracking-wider block mb-1">우변 (RHS) : 전개식 합</span>
-                <div class="text-xs text-slate-500 font-mono mb-1">
-                  <span id="calcA2_rhs">4²</span> + 2·(<span id="calcAB_rhs">4</span>·<span id="calcB_rhs">2</span>) + <span id="calcB2_rhs">2²</span>
-                </div>
-                <div class="text-xs text-slate-500 font-mono mb-2">
-                  = <span id="calcA2Val_rhs">16</span> + <span id="calc2ABVal_rhs">16</span> + <span id="calcB2Val_rhs">4</span>
-                </div>
-                <div class="text-2xl font-black text-emerald-700 font-mono">
-                  <span id="calcFinal_rhs">36</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Match Banner -->
-            <div class="mt-4 p-3 bg-slate-900 text-white rounded-xl flex items-center justify-center gap-3 font-mono text-xs sm:text-sm">
-              <span class="text-indigo-400 font-bold">(a + b)²</span>
-              <span class="text-emerald-400 font-bold text-base">=</span>
-              <span class="text-emerald-400 font-bold">a² + 2ab + b²</span>
-              <span class="text-slate-500">|</span>
-              <span class="text-amber-300 font-black"><span id="matchBannerResult">36</span> = <span id="matchBannerResult2">36</span> ✓</span>
-            </div>
-          </div>
-
         </div>
 
-        <!-- Right: Mental Math Superpower & Formative Quiz -->
-        <div class="lg:col-span-5 space-y-6">
-          
-          <!-- Card 3: 실생활 곱셈 공식 암산 비법 -->
-          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
-            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-              <div class="flex items-center gap-2">
-                <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
-                <h3 class="font-bold text-slate-800 text-sm sm:text-base">
-                  실생활 암산 마법: 큰 수의 제곱 계산!
-                </h3>
+        <!-- Right: Live Numerical Evaluator -->
+        <div class="lg:col-span-6 bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+          <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-100">
+            <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="calculator" class="w-4 h-4 text-indigo-600"></i>
+              실시간 수치 동기화 계산기 (좌변 = 우변 항등식 검증)
+            </h3>
+            <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">항상 일치</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <div class="p-2 bg-slate-50 rounded-lg border border-slate-200 text-xs">
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-bold text-slate-700">숫자 a:</span>
+                <span id="labelA_stage3" class="font-black text-indigo-700 font-mono">4</span>
               </div>
-              <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">수학적 초능력</span>
+              <input type="range" id="sliderA_stage3" min="1" max="15" value="4" step="1" 
+                     class="w-full h-1.5 bg-slate-200 rounded-lg cursor-pointer">
             </div>
 
-            <p class="text-xs text-slate-600 mb-3 leading-relaxed">
-              계산기 없이 <strong>52²</strong>이나 <strong>31²</strong> 같은 수를 몇 초 만에 암산할 수 있습니다. 십의 자리($a$)와 일의 자리($b$)로 나누어 공식을 적용해 보세요!
-            </p>
-
-            <!-- Selector -->
-            <div class="p-3.5 bg-amber-50/60 border border-amber-200/80 rounded-xl space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-amber-950">암산할 두 자리 수:</span>
-                <select id="mentalMathSelect" onchange="updateMentalMathDemo()" class="text-xs font-bold bg-white border border-amber-300 rounded-lg px-2.5 py-1.5 text-amber-950 focus:outline-none">
-                  <option value="52">52² = (50 + 2)²</option>
-                  <option value="31">31² = (30 + 1)²</option>
-                  <option value="32">32² = (30 + 2)²</option>
-                  <option value="103">103² = (100 + 3)²</option>
-                  <option value="25">25² = (20 + 5)²</option>
-                  <option value="42">42² = (40 + 2)²</option>
-                </select>
+            <div class="p-2 bg-slate-50 rounded-lg border border-slate-200 text-xs">
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-bold text-slate-700">숫자 b:</span>
+                <span id="labelB_stage3" class="font-black text-amber-700 font-mono">2</span>
               </div>
-
-              <!-- Animated Breakdown Box -->
-              <div id="mentalMathExplanation" class="bg-white p-3 rounded-xl border border-amber-200 font-mono text-xs sm:text-sm text-slate-800 space-y-1.5 shadow-2xs">
-                <!-- Dynamically filled -->
-              </div>
+              <input type="range" id="sliderB_stage3" min="1" max="15" value="2" step="1" 
+                     class="w-full h-1.5 bg-slate-200 rounded-lg cursor-pointer">
             </div>
           </div>
 
-          <!-- Card 4: 나만의 공식 발견 체크 퀴즈 -->
-          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
-            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-              <div class="flex items-center gap-2">
-                <i data-lucide="award" class="w-5 h-5 text-indigo-600"></i>
-                <h3 class="font-bold text-slate-800 text-sm sm:text-base">
-                  나만의 공식 발견 체크 퀴즈
-                </h3>
-              </div>
-              <span id="quizScoreBadge" class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
-                진행도: 0 / 4 완료
-              </span>
+          <!-- Comparison Cards -->
+          <div class="grid grid-cols-2 gap-2 mb-2 text-center text-xs">
+            <div class="p-2.5 bg-indigo-50/70 border border-indigo-100 rounded-lg">
+              <span class="text-[10px] text-indigo-600 font-bold block mb-0.5">좌변 : (a + b)²</span>
+              <div class="text-slate-500 font-mono text-[11px] mb-1">(<span id="calcA_lhs">4</span> + <span id="calcB_lhs">2</span>)²</div>
+              <div class="text-xl font-black text-indigo-700 font-mono" id="calcFinal_lhs">36</div>
             </div>
 
-            <!-- Quiz Questions Container -->
-            <div id="quizContainer" class="space-y-4">
-              <!-- Dynamically populated by renderQuizQuestions() -->
-            </div>
-
-            <!-- Quiz Completion Banner -->
-            <div id="quizSuccessBanner" class="hidden mt-4 p-4 bg-emerald-50 border-2 border-emerald-400 rounded-2xl text-center">
-              <div class="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 shadow-md">
-                <i data-lucide="check-check" class="w-6 h-6"></i>
-              </div>
-              <h4 class="font-black text-emerald-950 text-base">축하합니다! 퀴즈를 모두 통과했습니다!</h4>
-              <p class="text-xs text-emerald-800 mt-1">
-                활동적(조작) → 영상적(심상) → 기호적(공식) 3단계를 완주하여 <strong>(a+b)²의 본질</strong>을 완전히 체득하셨습니다.
-              </p>
-              <button onclick="openCertificateModal()" class="mt-3 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition-all inline-flex items-center gap-1.5">
-                <i data-lucide="award" class="w-4 h-4"></i>
-                <span>마스터 인증서 발급받기</span>
-              </button>
+            <div class="p-2.5 bg-emerald-50/70 border border-emerald-100 rounded-lg">
+              <span class="text-[10px] text-emerald-600 font-bold block mb-0.5">우변 : a² + 2ab + b²</span>
+              <div class="text-slate-500 font-mono text-[11px] mb-1"><span id="calcA2Val_rhs">16</span> + <span id="calc2ABVal_rhs">16</span> + <span id="calcB2Val_rhs">4</span></div>
+              <div class="text-xl font-black text-emerald-700 font-mono" id="calcFinal_rhs">36</div>
             </div>
           </div>
 
+          <div class="p-2 bg-slate-900 text-white rounded-lg flex items-center justify-center gap-2 font-mono text-xs">
+            <span class="text-indigo-400 font-bold">(a + b)²</span>
+            <span class="text-emerald-400 font-bold">=</span>
+            <span class="text-emerald-400 font-bold">a² + 2ab + b²</span>
+            <span class="text-slate-500">|</span>
+            <span class="text-amber-300 font-black"><span id="matchBannerResult">36</span> = <span id="matchBannerResult2">36</span> ✓</span>
+          </div>
         </div>
       </div>
+
+      <!-- NEW FEATURE 1: Advanced Coefficient Expansion Sandbox (2a+b)^2 -->
+      <div class="bg-white border-2 border-indigo-200 rounded-xl p-4 shadow-2xs">
+        <div class="flex flex-wrap items-center justify-between pb-2 mb-3 border-b border-slate-100 gap-2">
+          <div class="flex items-center gap-2">
+            <span class="p-1 bg-indigo-600 text-white rounded-md text-xs font-black">심화</span>
+            <h3 class="font-bold text-slate-800 text-xs sm:text-sm">계수 확장 챌린지: (2a + b)² 은 몇 개로 쪼개질까?</h3>
+          </div>
+          <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg text-xs font-bold">
+            <button onclick="setExpansionMode('1a1b')" id="btnExp1" class="px-2.5 py-1 bg-white rounded shadow-2xs text-indigo-700 font-black">(a + b)²</button>
+            <button onclick="setExpansionMode('2a1b')" id="btnExp2" class="px-2.5 py-1 text-slate-600 hover:text-slate-900 font-bold">(2a + b)²</button>
+            <button onclick="setExpansionMode('1a2b')" id="btnExp3" class="px-2.5 py-1 text-slate-600 hover:text-slate-900 font-bold">(a + 2b)²</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+          <div class="md:col-span-5 flex justify-center p-2 bg-slate-50 rounded-xl border border-slate-200">
+            <div id="coeffCanvas" class="relative transition-all duration-300">
+              <!-- Dynamically populated via renderCoeffExpansion() -->
+            </div>
+          </div>
+          <div class="md:col-span-7 space-y-2 text-xs">
+            <div id="coeffFormulaCard" class="p-3 bg-indigo-50/70 border border-indigo-200 rounded-xl font-mono space-y-1">
+              <!-- Dynamically populated -->
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              💡 <strong>중학생 최고 난이도 오개념:</strong> $(2a+b)^2$을 전개하면 $2a^2$이 아니라 $2a \times 2a = \mathbf{4a^2}$이 되고, 직사각형도 $2 \times 2a \times b = \mathbf{4ab}$가 됩니다! 위 도해에서 실제로 4조각씩 들어가는 것을 눈으로 직접 확인해 보세요!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW FEATURE 2: 30-Second Speed Mental Math Challenge Game -->
+      <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-200 rounded-xl p-4 shadow-2xs">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-amber-200/60">
+          <div class="flex items-center gap-2">
+            <span class="p-1 bg-amber-500 text-white rounded-md text-xs font-black">게임</span>
+            <h3 class="font-bold text-amber-950 text-xs sm:text-sm">⚡ 30초 스피드 암산 챌린지!</h3>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-amber-900">
+            <span>콤보: <strong id="speedCombo" class="text-orange-600 text-sm">0</strong>연속!</span>
+            <span>| 점수: <strong id="speedScore" class="text-indigo-600 text-sm">0</strong>점</span>
+          </div>
+        </div>
+
+        <div id="speedGameArea" class="bg-white p-3.5 rounded-xl border border-amber-200 space-y-3">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+              <span class="text-[11px] text-slate-400 font-bold block mb-0.5">도전 문제 (곱셈 공식을 써서 암산하세요!)</span>
+              <div class="text-2xl sm:text-3xl font-black text-slate-900 font-mono tracking-tight" id="speedProblemText">
+                31² = ?
+              </div>
+              <div class="text-xs text-slate-500 font-mono mt-0.5" id="speedHintText">
+                (30 + 1)² = 30² + 2·30·1 + 1²
+              </div>
+            </div>
+
+            <!-- 4 Options Grid -->
+            <div class="grid grid-cols-2 gap-2 w-full sm:w-72" id="speedOptions">
+              <!-- Dynamically filled by startSpeedChallenge() -->
+            </div>
+          </div>
+          <div id="speedFeedback" class="hidden p-2 rounded-lg text-xs font-bold text-center"></div>
+        </div>
+      </div>
+
+      <!-- Formative Assessment Quiz & Certificate -->
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-100">
+          <div class="flex items-center gap-1.5">
+            <i data-lucide="award" class="w-4 h-4 text-indigo-600"></i>
+            <h3 class="font-bold text-slate-800 text-xs sm:text-sm">
+              나만의 공식 발견 체크 퀴즈
+            </h3>
+          </div>
+          <span id="quizScoreBadge" class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
+            진행도: 0 / 4 정답
+          </span>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quizContainer" class="space-y-3">
+          <!-- Dynamically populated via renderQuizQuestions() -->
+        </div>
+
+        <!-- Quiz Completion Success Banner -->
+        <div id="quizSuccessBanner" class="hidden mt-3 p-3 bg-emerald-50 border-2 border-emerald-400 rounded-xl text-center">
+          <div class="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-1.5 shadow-xs">
+            <i data-lucide="check-check" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-black text-emerald-950 text-sm">축하합니다! 모든 퀴즈를 완벽하게 정복했습니다!</h4>
+          <p class="text-xs text-emerald-800 mt-0.5">
+            블록 조립 퍼즐부터 대수 공식 전개와 암산까지 (a+b)²의 원리를 완벽히 내면화하셨습니다.
+          </p>
+          <button onclick="openCertificateModal()" class="mt-2.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-xs transition-all inline-flex items-center gap-1">
+            <i data-lucide="award" class="w-3.5 h-3.5"></i>
+            <span>마스터 인증서 발급받기</span>
+          </button>
+        </div>
+      </div>
+
     </section>
 
   </main>
 
   <!-- ========================================================================= -->
-  <!-- FOOTER                                                                    -->
+  <!-- CLEAN & STUDENT-FRIENDLY FOOTER                                           -->
   <!-- ========================================================================= -->
-  <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-slate-500 text-xs transition-colors duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center space-x-2">
+  <footer class="bg-white border-t border-slate-200 mt-6 py-4 text-slate-500 text-xs transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+      <div class="flex items-center space-x-1.5">
         <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-600"></i>
-        <span>제롬 브루너(Jerome S. Bruner) 표상 양식 이론에 입각한 수학교육 웹 애플리케이션</span>
+        <span class="font-bold text-slate-700">이항정리 & 곱셈 공식 인터랙티브 수학 실험실</span>
       </div>
-      <div class="text-slate-400">
-        중학교 3학년 수학 | 곱셈 공식의 기하학적·대수적 직관 확립
+      <div class="text-slate-400 font-mono text-[11px]">
+        (a+b)² = a² + 2ab + b²
       </div>
     </div>
   </footer>
 
   <!-- ========================================================================= -->
-  <!-- MODAL 1: BRUNER PEDAGOGICAL THEORY MODAL                                  -->
-  <!-- ========================================================================= -->
-  <div id="theoryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <div class="flex items-center gap-2">
-          <div class="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
-            <i data-lucide="book-open" class="w-5 h-5"></i>
-          </div>
-          <h3 class="text-lg font-black text-slate-900">제롬 브루너의 표상 양식 이론 (EIS 이론)</h3>
-        </div>
-        <button onclick="closeModal('theoryModal')" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div class="mt-4 space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
-        <p>
-          인지심리학자 <strong>제롬 브루너(Jerome S. Bruner)</strong>는 지식이 학습자의 인지 발달에 맞추어 
-          <strong>활동적(Enactive) → 영상적(Iconic) → 기호적(Symbolic)</strong>의 3단계를 순차적으로 거칠 때 
-          가장 깊이 내면화된다고 설명합니다.
-        </p>
-
-        <!-- Stage 1 -->
-        <div class="p-3.5 bg-indigo-50/70 border border-indigo-100 rounded-xl">
-          <div class="flex items-center gap-2 font-bold text-indigo-900 mb-1">
-            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-[11px] flex items-center justify-center font-bold">1</span>
-            <span>활동적 표상 (Enactive Representation) - 신체적 조작</span>
-          </div>
-          <p class="text-xs text-indigo-950">
-            신체적 행동과 구체적인 물리적 조작을 통해 지식을 습득합니다. 1단계에서 학생들이 $a^2, ab, ba, b^2$ 4개의 블록을 직접 손으로 집어 큰 정사각형 틀에 맞추는 활동이 이에 해당합니다.
-          </p>
-        </div>
-
-        <!-- Stage 2 -->
-        <div class="p-3.5 bg-teal-50/70 border border-teal-100 rounded-xl">
-          <div class="flex items-center gap-2 font-bold text-teal-900 mb-1">
-            <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-[11px] flex items-center justify-center font-bold">2</span>
-            <span>영상적 표상 (Iconic Representation) - 시각적 심상</span>
-          </div>
-          <p class="text-xs text-teal-950">
-            실물 블록이 없어도 머릿속으로 떠올릴 수 있는 공간적 도해(Diagram)와 이미지로 개념을 구조화합니다. 2단계의 색상별 면적 도해와 분해 뷰를 통해 전체 면적이 네 부분으로 나뉨을 직관적으로 확인합니다.
-          </p>
-        </div>
-
-        <!-- Stage 3 -->
-        <div class="p-3.5 bg-purple-50/70 border border-purple-100 rounded-xl">
-          <div class="flex items-center gap-2 font-bold text-purple-900 mb-1">
-            <span class="w-5 h-5 rounded-full bg-purple-600 text-white text-[11px] flex items-center justify-center font-bold">3</span>
-            <span>기호적 표상 (Symbolic Representation) - 추상적 기호</span>
-          </div>
-          <p class="text-xs text-purple-950">
-            논리적 기호와 수식 $(a+b)^2 = a^2 + 2ab + b^2$으로 형식을 일반화합니다. 조작과 시각적 경험이 선행되었기 때문에 학생들은 공식을 단순 암기하지 않고도 그 필연성을 확신하게 됩니다.
-          </p>
-        </div>
-
-        <div class="p-3 bg-slate-100 rounded-xl text-slate-700 text-xs">
-          <strong>수학교육적 핵심:</strong> 중학생들이 흔히 범하는 <em>"(a+b)² = a² + b²"</em> 오류는 기호만 먼저 주입받아 발생합니다. 활동적·영상적 단계를 경험하면 누락된 $2ab$의 공간적 실체를 잊지 않게 됩니다.
-        </div>
-      </div>
-
-      <div class="mt-6 flex justify-end">
-        <button onclick="closeModal('theoryModal')" class="px-4 py-2 bg-slate-900 text-white font-bold rounded-xl text-xs sm:text-sm hover:bg-slate-800 transition-colors">
-          확인하고 닫기
-        </button>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ========================================================================= -->
-  <!-- MODAL 2: MASTERY CERTIFICATE MODAL                                        -->
+  <!-- MODAL: MASTERY CERTIFICATE MODAL                                          -->
   <!-- ========================================================================= -->
   <div id="certModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-4 border-amber-300 text-center relative overflow-hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-4 border-amber-300 text-center relative overflow-hidden">
       <div class="relative z-10">
-        <div class="w-16 h-16 bg-gradient-to-tr from-amber-400 to-yellow-300 rounded-2xl mx-auto flex items-center justify-center text-white shadow-lg mb-3">
-          <i data-lucide="medal" class="w-9 h-9 text-amber-900"></i>
+        <div class="w-14 h-14 bg-gradient-to-tr from-amber-400 to-yellow-300 rounded-2xl mx-auto flex items-center justify-center text-white shadow-md mb-2.5">
+          <i data-lucide="medal" class="w-8 h-8 text-amber-900"></i>
         </div>
 
-        <span class="text-xs font-bold text-amber-700 uppercase tracking-widest bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+        <span class="text-[11px] font-bold text-amber-700 uppercase tracking-widest bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
           수학적 탐구 마스터 인증서
         </span>
 
-        <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-2 mb-1">
+        <h3 class="text-lg sm:text-xl font-black text-slate-900 mt-1.5 mb-1">
           이항완성 마스터 인증
         </h3>
-        <p class="text-xs text-slate-500 mb-4">
-          Certificate of Bruner Cognitive Mathematical Mastery
+        <p class="text-xs text-slate-500 mb-3">
+          Certificate of Mathematical Mastery
         </p>
 
-        <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-left text-xs sm:text-sm text-slate-700 space-y-2 mb-4">
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-left text-xs text-slate-700 space-y-1.5 mb-3">
           <p>
-            위 학습자는 <strong>제롬 브루너의 표상 양식 이론</strong>에 따라
+            위 학습자는 <strong>(a+b)² 곱셈 공식</strong>에 대한
           </p>
-          <ul class="list-disc list-inside space-y-1 font-medium text-slate-800 text-xs">
-            <li><span class="text-indigo-600 font-bold">활동적 표상:</span> 블록 조작을 통한 (a+b)² 완성</li>
-            <li><span class="text-teal-600 font-bold">영상적 표상:</span> 기하학적 면적 분할 도해 분석</li>
-            <li><span class="text-purple-600 font-bold">기호적 표상:</span> (a+b)² = a² + 2ab + b² 대수적 정복</li>
+          <ul class="list-disc list-inside space-y-0.5 font-medium text-slate-800 text-xs">
+            <li><span class="text-indigo-600 font-bold">블록 퍼즐 탐구:</span> 조작을 통한 (a+b)² 공간 완성</li>
+            <li><span class="text-teal-600 font-bold">넓이 도해 분석:</span> 4개 영역(a², ba, ab, b²) 구조 파악</li>
+            <li><span class="text-purple-600 font-bold">공식 & 심화 도전:</span> 대수 공식 및 실생활 암산 완벽 정복</li>
           </ul>
-          <p class="pt-1 text-slate-600 text-xs">
-            3단계를 성공적으로 수행하여 오개념을 극복하고 완벽한 수학적 직관을 완성하였음을 인증합니다.
+          <p class="pt-0.5 text-slate-600 text-[11px]">
+            모든 단계를 성공적으로 완수하여 완벽한 수학적 직관을 획득하였음을 인증합니다.
           </p>
         </div>
 
-        <div class="flex items-center justify-center gap-2 text-xs text-slate-400 mb-5">
-          <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-          <span>수학교육 인지심리학 모델 | Bruner Math Lab</span>
-        </div>
-
-        <button onclick="closeModal('certModal')" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-colors shadow-md">
+        <button onclick="closeModal('certModal')" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg text-xs sm:text-sm transition-colors shadow-xs">
           확인
         </button>
       </div>
@@ -1087,7 +854,7 @@
 
 
   <!-- ========================================================================= -->
-  <!-- APPLICATION JAVASCRIPT LOGIC                                              -->
+  <!-- APPLICATION SCRIPT LOGIC                                                  -->
   <!-- ========================================================================= -->
   <script>
     /* ------------------------------------------------------------------------- */
@@ -1106,6 +873,15 @@
         ab2: false,
         b2: false
       },
+      // Rotation angles for rectangular blocks (in degrees: 0 or 90)
+      rotations: {
+        ab1: 0,
+        ab2: 0
+      },
+      expansionMode: '1a1b', // '1a1b', '2a1b', '1a2b'
+      speedScore: 0,
+      speedCombo: 0,
+      currentSpeedProblem: null,
       quizAnswers: {}
     };
 
@@ -1124,13 +900,9 @@
     function initAudio() {
       if (!audioCtx) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioContextClass) {
-          audioCtx = new AudioContextClass();
-        }
+        if (AudioContextClass) audioCtx = new AudioContextClass();
       }
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     }
 
     function playSound(type) {
@@ -1157,8 +929,8 @@
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(587.33, now); // D5
-        osc.frequency.exponentialRampToValueAtTime(880, now + 0.09); // A5
+        osc.frequency.setValueAtTime(587.33, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.09);
         gain.gain.setValueAtTime(0.14, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
         osc.connect(gain);
@@ -1167,7 +939,7 @@
         osc.stop(now + 0.1);
       } 
       else if (type === 'fanfare') {
-        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        const notes = [523.25, 659.25, 783.99, 1046.50];
         notes.forEach((freq, idx) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
@@ -1196,12 +968,12 @@
         if (!tab || !view) continue;
 
         if (s === stageNum) {
-          tab.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-200');
+          tab.classList.add('bg-indigo-600', 'text-white', 'shadow-xs');
           tab.classList.remove('text-slate-600', 'hover:bg-slate-100');
           view.classList.remove('hidden');
           view.classList.add('block');
         } else {
-          tab.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-200');
+          tab.classList.remove('bg-indigo-600', 'text-white', 'shadow-xs');
           tab.classList.add('text-slate-600', 'hover:bg-slate-100');
           view.classList.add('hidden');
           view.classList.remove('block');
@@ -1210,11 +982,14 @@
 
       if (stageNum === 1) renderStage1();
       else if (stageNum === 2) renderStage2();
-      else if (stageNum === 3) renderStage3();
+      else if (stageNum === 3) {
+        renderStage3();
+        renderCoeffExpansion();
+        generateSpeedProblem();
+      }
 
       if (window.lucide) lucide.createIcons();
       typesetMath();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function typesetMath() {
@@ -1230,14 +1005,26 @@
     }
 
     /* ------------------------------------------------------------------------- */
-    /* 4. STAGE 1: ENACTIVE (구체적 조작) LOGIC & MAGNETIC DRAG-AND-DROP          */
+    /* 4. STAGE 1: ADAPTIVE UNIT SCALE & ENHANCED ROTATION DRAG-AND-DROP         */
     /* ------------------------------------------------------------------------- */
     function getUnitPx() {
       const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
       const totalUnits = AppState.a + AppState.b;
-      if (screenW < 400) return Math.min(32, Math.floor(250 / totalUnits));
-      if (screenW < 640) return Math.min(38, Math.floor(280 / totalUnits));
-      return Math.min(42, Math.floor(320 / totalUnits));
+
+      let maxPx;
+      if (screenW < 640) {
+        // Mobile screen: fit nicely within screen width
+        maxPx = Math.min(260, screenW - 60);
+      } else if (screenW < 1024) {
+        // iPad / Tablet
+        maxPx = Math.min(290, Math.floor(screenW * 0.42));
+      } else {
+        // Desktop / Laptop: fit within screen height so NO vertical scrolling is needed!
+        const availableH = screenH - 260;
+        maxPx = Math.min(320, availableH, 320);
+      }
+      return Math.max(22, Math.floor(maxPx / totalUnits));
     }
 
     function renderStage1() {
@@ -1251,8 +1038,8 @@
       if (sliderA) sliderA.value = a;
       if (sliderB) sliderB.value = b;
 
-      document.getElementById('labelA_stage1').textContent = `a = ${a}`;
-      document.getElementById('labelB_stage1').textContent = `b = ${b}`;
+      document.getElementById('labelA_stage1').textContent = a;
+      document.getElementById('labelB_stage1').textContent = b;
       document.getElementById('dimTopA').textContent = a;
       document.getElementById('dimTopB').textContent = b;
       document.getElementById('dimTopTotal').textContent = a + b;
@@ -1298,6 +1085,14 @@
       updatePlacementProgress();
     }
 
+    function rotateBlock(slotKey, e) {
+      if (e) e.stopPropagation();
+      initAudio();
+      playSound('click');
+      AppState.rotations[slotKey] = (AppState.rotations[slotKey] === 0) ? 90 : 0;
+      renderPartsTray();
+    }
+
     function renderPartsTray() {
       const a = AppState.a;
       const b = AppState.b;
@@ -1305,11 +1100,39 @@
       const tray = document.getElementById('partsTray');
       tray.innerHTML = '';
 
+      // Determine dimensions taking rotation into account
+      const ab1IsRotated = (AppState.rotations.ab1 === 90);
+      const ab2IsRotated = (AppState.rotations.ab2 === 90);
+
       const blocks = [
-        { id: 'block-a2', slotKey: 'a2', w: a * unit, h: a * unit, title: 'a²', sub: `${a}×${a}`, bg: 'bg-mathA2', text: 'text-white' },
-        { id: 'block-ab1', slotKey: 'ab1', w: b * unit, h: a * unit, title: 'ba', sub: `${b}×${a}`, bg: 'bg-mathAB', text: 'text-white' },
-        { id: 'block-ab2', slotKey: 'ab2', w: a * unit, h: b * unit, title: 'ab', sub: `${a}×${b}`, bg: 'bg-mathBA', text: 'text-white' },
-        { id: 'block-b2', slotKey: 'b2', w: b * unit, h: b * unit, title: 'b²', sub: `${b}×${b}`, bg: 'bg-mathB2', text: 'text-white' },
+        { 
+          id: 'block-a2', slotKey: 'a2', 
+          w: a * unit, h: a * unit, 
+          title: 'a²', sub: `${a}×${a}`, 
+          bg: 'bg-mathA2', text: 'text-white', canRotate: false 
+        },
+        { 
+          id: 'block-ab1', slotKey: 'ab1', 
+          w: (ab1IsRotated ? a : b) * unit, 
+          h: (ab1IsRotated ? b : a) * unit, 
+          title: ab1IsRotated ? 'ab' : 'ba', 
+          sub: ab1IsRotated ? `${a}×${b}` : `${b}×${a}`, 
+          bg: 'bg-mathAB', text: 'text-white', canRotate: true 
+        },
+        { 
+          id: 'block-ab2', slotKey: 'ab2', 
+          w: (ab2IsRotated ? b : a) * unit, 
+          h: (ab2IsRotated ? a : b) * unit, 
+          title: ab2IsRotated ? 'ba' : 'ab', 
+          sub: ab2IsRotated ? `${b}×${a}` : `${a}×${b}`, 
+          bg: 'bg-mathBA', text: 'text-white', canRotate: true 
+        },
+        { 
+          id: 'block-b2', slotKey: 'b2', 
+          w: b * unit, h: b * unit, 
+          title: 'b²', sub: `${b}×${b}`, 
+          bg: 'bg-mathB2', text: 'text-white', canRotate: false 
+        },
       ];
 
       blocks.forEach(block => {
@@ -1317,11 +1140,20 @@
         const el = document.createElement('div');
         el.id = block.id;
         el.dataset.slotKey = block.slotKey;
-        el.className = `draggable-block ${block.bg} ${block.text} rounded-xl font-bold flex flex-col items-center justify-center shadow-md border-2 border-white/50`;
+        el.className = `draggable-block ${block.bg} ${block.text} rounded-lg font-bold flex flex-col items-center justify-center shadow-sm border border-white/60 relative group`;
+
+        const rotateBtnHtml = block.canRotate ? `
+          <button onclick="rotateBlock('${block.slotKey}', event)" 
+                  class="absolute top-1 right-1 bg-black/30 hover:bg-black/60 text-white rounded p-1 text-[10px] transition-all shadow-xs" 
+                  title="90도 회전하기">
+            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          </button>
+        ` : '';
 
         el.innerHTML = `
-          <span class="text-xs sm:text-base font-black tracking-tight">${block.title}</span>
-          <span class="text-[10px] opacity-85 font-mono">${block.sub}</span>
+          ${rotateBtnHtml}
+          <span class="text-xs sm:text-sm font-black tracking-tight">${block.title}</span>
+          <span class="text-[9px] opacity-85 font-mono">${block.sub}</span>
         `;
 
         if (isPlaced) {
@@ -1332,7 +1164,7 @@
             el.style.height = '100%';
             el.style.transform = '';
             el.classList.add('cursor-pointer');
-            el.title = '클릭하면 보관함으로 돌아갑니다';
+            el.title = '클릭하면 보관함으로 복귀합니다';
             el.onclick = (e) => {
               e.stopPropagation();
               returnBlockToTray(block.slotKey);
@@ -1342,19 +1174,18 @@
         } else {
           const slot = document.getElementById(`slot-${block.slotKey}`);
           if (slot) {
-            const slotNameMap = { a2: 'a² 자리', ab1: 'ba (ab) 자리', ab2: 'ab 자리', b2: 'b² 자리' };
+            const slotNameMap = { a2: 'a²', ab1: 'ba', ab2: 'ab', b2: 'b²' };
             slot.innerHTML = `<span class="slot-placeholder">${slotNameMap[block.slotKey]}</span>`;
           }
           el.style.width = `${block.w}px`;
           el.style.height = `${block.h}px`;
-          el.title = '드래그하거나 탭하여 틀에 넣으세요';
+          el.title = '드래그하거나 탭하여 조립';
           setupPointerDrag(el, block.slotKey);
           tray.appendChild(el);
         }
       });
     }
 
-    /* Butter-smooth Hardware Accelerated Pointer Drag Handler */
     function setupPointerDrag(element, slotKey) {
       let startX = 0, startY = 0;
       let isPointerDown = false;
@@ -1363,6 +1194,7 @@
       element.style.touchAction = 'none';
 
       element.onpointerdown = function(e) {
+        if (e.target.closest('button')) return; // Ignore if rotate button clicked
         if (e.button !== undefined && e.button !== 0) return;
         e.preventDefault();
         initAudio();
@@ -1372,9 +1204,7 @@
         startX = e.clientX;
         startY = e.clientY;
 
-        try {
-          element.setPointerCapture(e.pointerId);
-        } catch (_) {}
+        try { element.setPointerCapture(e.pointerId); } catch (_) {}
         element.style.transition = 'none';
       };
 
@@ -1394,7 +1224,6 @@
         if (isDragging) {
           element.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(1.05)`;
 
-          // Check proximity to matching slot
           const targetSlot = document.getElementById(`slot-${slotKey}`);
           if (targetSlot) {
             const slotRect = targetSlot.getBoundingClientRect();
@@ -1409,11 +1238,8 @@
             };
 
             const dist = Math.hypot(elemCenter.x - slotCenter.x, elemCenter.y - slotCenter.y);
-            if (dist < 90) {
-              targetSlot.classList.add('hovered');
-            } else {
-              targetSlot.classList.remove('hovered');
-            }
+            if (dist < 90) targetSlot.classList.add('hovered');
+            else targetSlot.classList.remove('hovered');
           }
         }
       };
@@ -1422,9 +1248,7 @@
         if (!isPointerDown) return;
         isPointerDown = false;
 
-        try {
-          element.releasePointerCapture(e.pointerId);
-        } catch (_) {}
+        try { element.releasePointerCapture(e.pointerId); } catch (_) {}
 
         element.classList.remove('is-dragging');
         element.style.zIndex = '';
@@ -1433,12 +1257,11 @@
         if (targetSlot) targetSlot.classList.remove('hovered');
 
         if (!isDragging) {
-          // Tap / Click action
+          // Tap action: snap into position
           snapBlockToSlot(slotKey);
           return;
         }
 
-        // Drag action evaluation
         isDragging = false;
         let snapped = false;
 
@@ -1463,21 +1286,16 @@
             elemCenter.y <= frameRect.bottom + 20
           );
 
-          if (dist < 100 || inFrame) {
-            snapped = true;
-          }
+          if (dist < 100 || inFrame) snapped = true;
         }
 
         if (snapped) {
           element.style.transform = '';
           snapBlockToSlot(slotKey);
         } else {
-          // Glide back smoothly
           element.style.transition = 'transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)';
           element.style.transform = 'translate3d(0, 0, 0)';
-          setTimeout(() => {
-            element.style.transition = '';
-          }, 250);
+          setTimeout(() => { element.style.transition = ''; }, 250);
         }
       };
     }
@@ -1489,9 +1307,7 @@
       updatePlacementProgress();
 
       const allPlaced = Object.values(AppState.placedSlots).every(v => v === true);
-      if (allPlaced) {
-        onStage1Complete();
-      }
+      if (allPlaced) onStage1Complete();
     }
 
     function returnBlockToTray(slotKey) {
@@ -1499,7 +1315,7 @@
       playSound('click');
       const slot = document.getElementById(`slot-${slotKey}`);
       if (slot) {
-        const slotNameMap = { a2: 'a² 자리', ab1: 'ba (ab) 자리', ab2: 'ab 자리', b2: 'b² 자리' };
+        const slotNameMap = { a2: 'a²', ab1: 'ba', ab2: 'ab', b2: 'b²' };
         slot.innerHTML = `<span class="slot-placeholder">${slotNameMap[slotKey]}</span>`;
       }
       renderPartsTray();
@@ -1511,11 +1327,11 @@
       const placedCount = Object.values(AppState.placedSlots).filter(Boolean).length;
       const badge = document.getElementById('placementBadge');
       if (badge) {
-        badge.textContent = `${placedCount} / 4 조각 조립됨`;
+        badge.textContent = `${placedCount} / 4 조립됨`;
         if (placedCount === 4) {
-          badge.className = 'text-xs font-bold px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full';
+          badge.className = 'text-xs font-bold px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full';
         } else {
-          badge.className = 'text-xs font-bold px-3 py-1 bg-slate-100 text-slate-600 rounded-full';
+          badge.className = 'text-xs font-bold px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-full';
         }
       }
     }
@@ -1531,7 +1347,7 @@
     }
 
     function resetStage1Blocks() {
-      const slotNameMap = { a2: 'a² 자리', ab1: 'ba (ab) 자리', ab2: 'ab 자리', b2: 'b² 자리' };
+      const slotNameMap = { a2: 'a²', ab1: 'ba', ab2: 'ab', b2: 'b²' };
       ['a2', 'ab1', 'ab2', 'b2'].forEach(key => {
         AppState.placedSlots[key] = false;
         const slot = document.getElementById(`slot-${key}`);
@@ -1540,6 +1356,8 @@
           slot.classList.remove('hovered');
         }
       });
+      AppState.rotations.ab1 = 0;
+      AppState.rotations.ab2 = 0;
       playSound('click');
       document.getElementById('misconceptionBanner').classList.add('hidden');
       document.getElementById('stage1SuccessCard').classList.add('hidden');
@@ -1581,7 +1399,7 @@
     }
 
     /* ------------------------------------------------------------------------- */
-    /* 5. STAGE 2: ICONIC (영상적 표상) LOGIC & ARCHITECTURAL DIAGRAM            */
+    /* 5. STAGE 2: GEOMETRIC BREAKDOWN DIAGRAM                                   */
     /* ------------------------------------------------------------------------- */
     function renderStage2() {
       const a = AppState.a;
@@ -1592,8 +1410,8 @@
       if (sliderA) sliderA.value = a;
       if (sliderB) sliderB.value = b;
 
-      document.getElementById('labelA_stage2').textContent = `a = ${a}`;
-      document.getElementById('labelB_stage2').textContent = `b = ${b}`;
+      document.getElementById('labelA_stage2').textContent = a;
+      document.getElementById('labelB_stage2').textContent = b;
 
       const valA2 = a * a;
       const valAB1 = b * a;
@@ -1607,14 +1425,6 @@
       document.getElementById('valB2').textContent = valB2;
       document.getElementById('valTotalFormulaSum').textContent = total;
 
-      document.getElementById('inspectWidthA').textContent = a;
-      document.getElementById('inspectWidthB').textContent = b;
-      document.getElementById('inspectWidthTotal').textContent = a + b;
-      document.getElementById('inspectHeightA').textContent = a;
-      document.getElementById('inspectHeightB').textContent = b;
-      document.getElementById('inspectHeightTotal').textContent = a + b;
-
-      // Ratio Bar percentages
       const pctA2 = ((valA2 / total) * 100).toFixed(1);
       const pctAB1 = ((valAB1 / total) * 100).toFixed(1);
       const pctAB2 = ((valAB2 / total) * 100).toFixed(1);
@@ -1647,78 +1457,74 @@
       const showGrid = document.getElementById('toggleGridCheckbox')?.checked ?? true;
       const isExploded = AppState.explodedView;
 
-      const scale = 36; // px per math unit
+      const scale = getUnitPx();
       const widthA = a * scale;
       const widthB = b * scale;
       const totalSize = (a + b) * scale;
-      const gap = isExploded ? 20 : 0; // explosion separation distance
+      const gap = isExploded ? 16 : 0;
 
-      container.style.width = `${totalSize + gap + 50}px`;
-      container.style.height = `${totalSize + gap + 50}px`;
+      container.style.width = `${totalSize + gap + 40}px`;
+      container.style.height = `${totalSize + gap + 40}px`;
 
       container.innerHTML = `
         <!-- Top Dimension: a -->
-        <div class="absolute text-[11px] font-black text-indigo-600 flex items-center justify-center transition-all"
-             style="top: 0px; left: ${36}px; width: ${widthA}px; height: 26px;">
-          <span class="bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200 shadow-2xs font-mono">가로 a = ${a}</span>
+        <div class="absolute text-[10px] font-black text-indigo-600 flex items-center justify-center transition-all"
+             style="top: 0px; left: ${30}px; width: ${widthA}px; height: 22px;">
+          <span class="bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-200 font-mono">a = ${a}</span>
         </div>
 
         <!-- Top Dimension: b -->
-        <div class="absolute text-[11px] font-black text-amber-600 flex items-center justify-center transition-all"
-             style="top: 0px; left: ${36 + widthA + gap}px; width: ${widthB}px; height: 26px;">
-          <span class="bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 shadow-2xs font-mono">가로 b = ${b}</span>
+        <div class="absolute text-[10px] font-black text-amber-600 flex items-center justify-center transition-all"
+             style="top: 0px; left: ${30 + widthA + gap}px; width: ${widthB}px; height: 22px;">
+          <span class="bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200 font-mono">b = ${b}</span>
         </div>
 
         <!-- Left Dimension: a -->
-        <div class="absolute text-[11px] font-black text-indigo-600 flex items-center justify-center transition-all"
-             style="left: 0px; top: ${36}px; width: 30px; height: ${widthA}px;">
-          <span class="bg-indigo-50 px-1.5 py-0.5 rounded-md border border-indigo-200 shadow-2xs font-mono">세로 a</span>
+        <div class="absolute text-[10px] font-black text-indigo-600 flex items-center justify-center transition-all"
+             style="left: 0px; top: ${30}px; width: 26px; height: ${widthA}px;">
+          <span class="bg-indigo-50 px-1 py-0.2 rounded border border-indigo-200 font-mono">a</span>
         </div>
 
         <!-- Left Dimension: b -->
-        <div class="absolute text-[11px] font-black text-amber-600 flex items-center justify-center transition-all"
-             style="left: 0px; top: ${36 + widthA + gap}px; width: 30px; height: ${widthB}px;">
-          <span class="bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-200 shadow-2xs font-mono">세로 b</span>
+        <div class="absolute text-[10px] font-black text-amber-600 flex items-center justify-center transition-all"
+             style="left: 0px; top: ${30 + widthA + gap}px; width: 26px; height: ${widthB}px;">
+          <span class="bg-amber-50 px-1 py-0.2 rounded border border-amber-200 font-mono">b</span>
         </div>
 
         <!-- 1. Top-Left Region: a^2 -->
         <div id="diag-region-a2" 
-             onmouseenter="highlightRegion('a2')" onmouseleave="resetHighlight()"
              onclick="highlightRegion('a2')"
-             class="absolute transition-all duration-300 rounded-xl cursor-pointer flex flex-col items-center justify-center p-2 border-2 border-white shadow-md ${showGrid ? 'grid-pattern' : ''}"
-             style="top: 36px; left: 36px; width: ${widthA}px; height: ${widthA}px; background-color: ${COLORS.a2}; color: white;">
-          <span class="text-sm sm:text-xl font-black tracking-tight">a²</span>
-          <span class="text-[11px] opacity-90 font-mono">${a} × ${a} = ${a*a}</span>
+             class="absolute transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center justify-center p-1.5 border-2 border-white shadow-sm ${showGrid ? 'grid-pattern' : ''}"
+             style="top: 30px; left: 30px; width: ${widthA}px; height: ${widthA}px; background-color: ${COLORS.a2}; color: white;">
+          <span class="text-xs sm:text-base font-black tracking-tight">a²</span>
+          <span class="text-[9px] opacity-90 font-mono">${a}×${a}</span>
         </div>
 
         <!-- 2. Top-Right Region: ba (ab) -->
         <div id="diag-region-ab1" 
-             onmouseenter="highlightRegion('ab1')" onmouseleave="resetHighlight()"
              onclick="highlightRegion('ab1')"
-             class="absolute transition-all duration-300 rounded-xl cursor-pointer flex flex-col items-center justify-center p-2 border-2 border-white shadow-md ${showGrid ? 'grid-pattern' : ''}"
-             style="top: 36px; left: ${36 + widthA + gap}px; width: ${widthB}px; height: ${widthA}px; background-color: ${COLORS.ab1}; color: white;">
-          <span class="text-sm sm:text-base font-black tracking-tight">ba</span>
-          <span class="text-[11px] opacity-90 font-mono">${b} × ${a} = ${b*a}</span>
+             class="absolute transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center justify-center p-1.5 border-2 border-white shadow-sm ${showGrid ? 'grid-pattern' : ''}"
+             style="top: 30px; left: ${30 + widthA + gap}px; width: ${widthB}px; height: ${widthA}px; background-color: ${COLORS.ab1}; color: white;">
+          <span class="text-xs sm:text-sm font-black tracking-tight">ba</span>
+          <span class="text-[9px] opacity-90 font-mono">${b}×${a}</span>
         </div>
 
         <!-- 3. Bottom-Left Region: ab -->
         <div id="diag-region-ab2" 
-             onmouseenter="highlightRegion('ab2')" onmouseleave="resetHighlight()"
              onclick="highlightRegion('ab2')"
-             class="absolute transition-all duration-300 rounded-xl cursor-pointer flex flex-col items-center justify-center p-2 border-2 border-white shadow-md ${showGrid ? 'grid-pattern' : ''}"
-             style="top: ${36 + widthA + gap}px; left: 36px; width: ${widthA}px; height: ${widthB}px; background-color: ${COLORS.ab2}; color: white;">
-          <span class="text-sm sm:text-base font-black tracking-tight">ab</span>
-          <span class="text-[11px] opacity-90 font-mono">${a} × ${b} = ${a*b}</span>
+             class="absolute transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center justify-center p-1.5 border-2 border-white shadow-sm ${showGrid ? 'grid-pattern' : ''}"
+             style="top: ${30 + widthA + gap}px; left: 30px; width: ${widthA}px; height: ${widthB}px; background-color: ${COLORS.ab2}; color: white;">
+          <span class="text-xs sm:text-sm font-black tracking-tight">ab</span>
+          <span class="text-[9px] opacity-90 font-mono">${a}×${b}</span>
         </div>
 
         <!-- 4. Bottom-Right Region: b^2 -->
         <div id="diag-region-b2" 
-             onmouseenter="highlightRegion('b2')" onmouseleave="resetHighlight()"
              onclick="highlightRegion('b2')"
-             class="absolute transition-all duration-300 rounded-xl cursor-pointer flex flex-col items-center justify-center p-1 border-2 border-white shadow-md ${showGrid ? 'grid-pattern' : ''}"
-             style="top: ${36 + widthA + gap}px; left: ${36 + widthA + gap}px; width: ${widthB}px; height: ${widthB}px; background-color: ${COLORS.b2}; color: white;">
-          <span class="text-xs sm:text-base font-black tracking-tight">b²</span>
-          <span class="text-[10px] opacity-90 font-mono">${b} × ${b} = ${b*b}</span>
+             class="absolute transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center justify-center p-1 border-2 border-white shadow-sm ${showGrid ? 'grid-pattern' : ''}"
+             style="top: ${30 + widthA + gap}px; left: ${30 + widthA + gap}px; width: ${widthB}px; height: ${widthB}px; background-color: ${COLORS.b2}; color: white;">
+          <span class="text-xs sm:text-sm font-black tracking-tight">b²</span>
+          <span class="text-[9px] opacity-90 font-mono">${b}×${b}</span>
         </div>
       `;
     }
@@ -1728,7 +1534,7 @@
       playSound('click');
       const btnText = document.getElementById('explodeBtnText');
       if (btnText) {
-        btnText.textContent = AppState.explodedView ? '조각 모아서 합치기' : '조각 분해하여 보기';
+        btnText.textContent = AppState.explodedView ? '조각 합치기' : '조각 분해하여 보기';
       }
       renderStage2Diagram();
     }
@@ -1751,38 +1557,38 @@
         a2: {
           title: '좌상단 큰 정사각형',
           color: COLORS.a2,
-          w: `가로 a (${a})`,
-          h: `세로 a (${a})`,
+          w: `a (${a})`,
+          h: `a (${a})`,
           formula: 'a × a = a²',
           calc: `${a} × ${a} = ${a * a}`,
-          desc: '한 변의 길이가 a인 정사각형으로, 공식의 첫 번째 항인 a²에 대응합니다.'
+          desc: '한 변의 길이가 a인 정사각형 (a²)'
         },
         ab1: {
           title: '우상단 세로 직사각형',
           color: COLORS.ab1,
-          w: `가로 b (${b})`,
-          h: `세로 a (${a})`,
+          w: `b (${b})`,
+          h: `a (${a})`,
           formula: 'b × a = ba = ab',
           calc: `${b} × ${a} = ${b * a}`,
-          desc: '가로 b, 세로 a인 직사각형으로, 첫 번째 ab에 해당합니다.'
+          desc: '가로 b, 세로 a인 직사각형 (ab)'
         },
         ab2: {
           title: '좌하단 가로 직사각형',
           color: COLORS.ab2,
-          w: `가로 a (${a})`,
-          h: `세로 b (${b})`,
+          w: `a (${a})`,
+          h: `b (${b})`,
           formula: 'a × b = ab',
           calc: `${a} × ${b} = ${a * b}`,
-          desc: '가로 a, 세로 b인 직사각형으로, 두 번째 ab에 해당합니다.'
+          desc: '가로 a, 세로 b인 직사각형 (ab)'
         },
         b2: {
           title: '우하단 작은 정사각형',
           color: COLORS.b2,
-          w: `가로 b (${b})`,
-          h: `세로 b (${b})`,
+          w: `b (${b})`,
+          h: `b (${b})`,
           formula: 'b × b = b²',
           calc: `${b} × ${b} = ${b * b}`,
-          desc: '한 변의 길이가 b인 정사각형으로, 공식의 마지막 항인 b²에 대응합니다.'
+          desc: '한 변의 길이가 b인 정사각형 (b²)'
         }
       };
 
@@ -1792,25 +1598,16 @@
       document.getElementById('inspectorTitle').textContent = info.title;
       document.getElementById('inspectorColorBadge').style.backgroundColor = info.color;
       document.getElementById('inspectorContent').innerHTML = `
-        <div class="p-3 rounded-xl border border-slate-200 space-y-2 bg-slate-50">
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-500">가로 길이:</span>
-            <span class="font-bold text-slate-900 font-mono">${info.w}</span>
+        <div class="p-2.5 rounded-lg border border-slate-200 space-y-1 bg-slate-50 font-mono text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-500 font-sans">가로 × 세로:</span>
+            <span class="font-bold text-slate-900">${info.w} × ${info.h}</span>
           </div>
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-500">세로 길이:</span>
-            <span class="font-bold text-slate-900 font-mono">${info.h}</span>
-          </div>
-          <div class="flex justify-between text-xs font-bold pt-1 border-t border-slate-200">
-            <span class="text-indigo-700">영역 넓이 수식:</span>
-            <span class="font-mono text-indigo-700 font-bold">${info.formula}</span>
-          </div>
-          <div class="flex justify-between text-xs font-black text-slate-900">
-            <span>실제 계산값:</span>
-            <span class="font-mono text-slate-950 font-bold">${info.calc}</span>
+          <div class="flex justify-between pt-1 border-t border-slate-200">
+            <span class="text-indigo-700 font-bold font-sans">넓이 수식:</span>
+            <span class="font-bold text-indigo-700">${info.formula} = ${info.calc}</span>
           </div>
         </div>
-        <p class="text-xs text-slate-600 mt-2 leading-relaxed">${info.desc}</p>
       `;
 
       ['a2', 'ab1', 'ab2', 'b2'].forEach(key => {
@@ -1819,36 +1616,21 @@
         if (key === regionKey) {
           if (card) card.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50');
           if (diag) {
-            diag.style.transform = 'scale(1.06)';
+            diag.style.transform = 'scale(1.05)';
             diag.style.zIndex = '30';
-            diag.style.boxShadow = '0 12px 25px -5px rgba(0,0,0,0.3)';
           }
         } else {
           if (card) card.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50');
           if (diag) {
             diag.style.transform = 'scale(0.97)';
-            diag.style.opacity = '0.65';
+            diag.style.opacity = '0.7';
           }
         }
       });
     }
 
-    function resetHighlight() {
-      ['a2', 'ab1', 'ab2', 'b2'].forEach(key => {
-        const card = document.getElementById(`card-region-${key}`);
-        const diag = document.getElementById(`diag-region-${key}`);
-        if (card) card.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50');
-        if (diag) {
-          diag.style.transform = 'scale(1)';
-          diag.style.opacity = '1';
-          diag.style.zIndex = '1';
-          diag.style.boxShadow = '';
-        }
-      });
-    }
-
     /* ------------------------------------------------------------------------- */
-    /* 6. STAGE 3: SYMBOLIC (기호적 표상) LOGIC & LIVE EQUATION SYNCHRONIZER     */
+    /* 6. STAGE 3: FORMULAS, ADVANCED EXPANSION, SPEED GAME & QUIZ               */
     /* ------------------------------------------------------------------------- */
     function renderStage3() {
       const a = AppState.a;
@@ -1859,27 +1641,19 @@
       if (sliderA) sliderA.value = a;
       if (sliderB) sliderB.value = b;
 
-      document.getElementById('labelA_stage3').textContent = `a = ${a}`;
-      document.getElementById('labelB_stage3').textContent = `b = ${b}`;
+      document.getElementById('labelA_stage3').textContent = a;
+      document.getElementById('labelB_stage3').textContent = b;
 
-      // LHS
       const sum = a + b;
       const lhsFinal = sum * sum;
       document.getElementById('calcA_lhs').textContent = a;
       document.getElementById('calcB_lhs').textContent = b;
-      document.getElementById('calcSum_lhs').textContent = sum;
       document.getElementById('calcFinal_lhs').textContent = lhsFinal;
 
-      // RHS
       const a2 = a * a;
       const twoAB = 2 * a * b;
       const b2 = b * b;
       const rhsFinal = a2 + twoAB + b2;
-
-      document.getElementById('calcA2_rhs').textContent = `${a}²`;
-      document.getElementById('calcAB_rhs').textContent = a;
-      document.getElementById('calcB_rhs').textContent = b;
-      document.getElementById('calcB2_rhs').textContent = `${b}²`;
 
       document.getElementById('calcA2Val_rhs').textContent = a2;
       document.getElementById('calc2ABVal_rhs').textContent = twoAB;
@@ -1888,48 +1662,202 @@
 
       document.getElementById('matchBannerResult').textContent = lhsFinal;
       document.getElementById('matchBannerResult2').textContent = rhsFinal;
-
-      updateMentalMathDemo();
     }
 
-    function updateMentalMathDemo() {
-      const val = parseInt(document.getElementById('mentalMathSelect')?.value || '52');
-      const container = document.getElementById('mentalMathExplanation');
-      if (!container) return;
+    /* Advanced Coefficient Sandbox (2a+b)^2 / (a+2b)^2 */
+    function setExpansionMode(mode) {
+      AppState.expansionMode = mode;
+      playSound('click');
 
-      let a = 0, b = 0;
-      if (val === 52) { a = 50; b = 2; }
-      else if (val === 31) { a = 30; b = 1; }
-      else if (val === 32) { a = 30; b = 2; }
-      else if (val === 103) { a = 100; b = 3; }
-      else if (val === 25) { a = 20; b = 5; }
-      else if (val === 42) { a = 40; b = 2; }
+      ['1a1b', '2a1b', '1a2b'].forEach(m => {
+        const btn = document.getElementById(`btnExp${m === '1a1b' ? '1' : m === '2a1b' ? '2' : '3'}`);
+        if (m === mode) {
+          btn.className = 'px-2.5 py-1 bg-white rounded shadow-2xs text-indigo-700 font-black';
+        } else {
+          btn.className = 'px-2.5 py-1 text-slate-600 hover:text-slate-900 font-bold';
+        }
+      });
 
-      const a2 = a * a;
-      const twoAB = 2 * a * b;
-      const b2 = b * b;
-      const result = a2 + twoAB + b2;
+      renderCoeffExpansion();
+    }
 
-      container.innerHTML = `
-        <div class="text-[11px] text-slate-500 font-bold mb-1">암산 원리: (${a} + ${b})² 대수 전개</div>
-        <div class="flex items-center gap-1.5 text-indigo-700 font-bold">
-          <span>${val}²</span> = 
-          <span>${a}² + 2·(${a}·${b}) + ${b}²</span>
-        </div>
-        <div class="text-slate-600 text-xs mt-1">
-          = <strong class="text-indigo-600 font-mono">${a2.toLocaleString()}</strong> 
-          + <strong class="text-teal-600 font-mono">${twoAB.toLocaleString()}</strong> 
-          + <strong class="text-amber-600 font-mono">${b2}</strong>
-        </div>
-        <div class="text-emerald-700 font-black text-sm pt-1.5 border-t border-amber-200 mt-1 flex items-center justify-between">
-          <span>최종 암산 결과:</span>
-          <span class="font-mono text-base font-black">${result.toLocaleString()} ✓</span>
-        </div>
-      `;
+    function renderCoeffExpansion() {
+      const canvas = document.getElementById('coeffCanvas');
+      const card = document.getElementById('coeffFormulaCard');
+      if (!canvas || !card) return;
+
+      const mode = AppState.expansionMode;
+
+      if (mode === '2a1b') {
+        // (2a + b)^2
+        canvas.style.width = '190px';
+        canvas.style.height = '190px';
+        canvas.innerHTML = `
+          <!-- 4 of a^2 squares (2x2 grid) -->
+          <div class="absolute top-0 left-0 w-[120px] h-[120px] grid grid-cols-2 gap-0.5 bg-indigo-700 p-0.5 rounded-tl-lg">
+            <div class="bg-indigo-500 rounded text-[9px] text-white flex items-center justify-center font-bold">a²</div>
+            <div class="bg-indigo-500 rounded text-[9px] text-white flex items-center justify-center font-bold">a²</div>
+            <div class="bg-indigo-500 rounded text-[9px] text-white flex items-center justify-center font-bold">a²</div>
+            <div class="bg-indigo-500 rounded text-[9px] text-white flex items-center justify-center font-bold">a²</div>
+          </div>
+          <!-- 2 of top-right ab rectangles (stacked) -->
+          <div class="absolute top-0 left-[122px] w-[60px] h-[120px] flex flex-col gap-0.5">
+            <div class="bg-teal-500 rounded text-[9px] text-white flex items-center justify-center font-bold h-full">ab</div>
+            <div class="bg-teal-500 rounded text-[9px] text-white flex items-center justify-center font-bold h-full">ab</div>
+          </div>
+          <!-- 2 of bottom-left ab rectangles (side-by-side) -->
+          <div class="absolute top-[122px] left-0 w-[120px] h-[60px] flex gap-0.5">
+            <div class="bg-sky-500 rounded text-[9px] text-white flex items-center justify-center font-bold w-full">ab</div>
+            <div class="bg-sky-500 rounded text-[9px] text-white flex items-center justify-center font-bold w-full">ab</div>
+          </div>
+          <!-- 1 of b^2 square -->
+          <div class="absolute top-[122px] left-[122px] w-[60px] h-[60px] bg-amber-500 rounded-br-lg text-[9px] text-white flex items-center justify-center font-bold">
+            b²
+          </div>
+        `;
+
+        card.innerHTML = `
+          <div class="text-[10px] text-slate-500 font-bold">공식 전개: (2a + b)²</div>
+          <div class="text-xs sm:text-sm font-black text-indigo-900">
+            (2a + b)² = (2a)² + 2·(2a)·b + b²
+          </div>
+          <div class="text-xs font-black text-indigo-700 pt-0.5">
+            = <span class="text-mathA2">4a²</span> + <span class="text-teal-600">4ab</span> + <span class="text-mathB2">b²</span>
+          </div>
+          <div class="text-[10px] text-slate-500 pt-1 border-t border-indigo-200">
+            조각 구성: a² 조각 <strong>4개</strong> + ab 직사각형 <strong>4개</strong> + b² 조각 <strong>1개</strong>
+          </div>
+        `;
+      } 
+      else if (mode === '1a2b') {
+        // (a + 2b)^2
+        canvas.style.width = '190px';
+        canvas.style.height = '190px';
+        canvas.innerHTML = `
+          <!-- 1 of a^2 square -->
+          <div class="absolute top-0 left-0 w-[110px] h-[110px] bg-indigo-600 rounded-tl-lg text-xs text-white flex items-center justify-center font-bold">
+            a²
+          </div>
+          <!-- 2 of ab rectangles (side by side top right) -->
+          <div class="absolute top-0 left-[112px] w-[70px] h-[110px] flex gap-0.5">
+            <div class="bg-teal-500 rounded text-[9px] text-white flex items-center justify-center font-bold w-full">ab</div>
+            <div class="bg-teal-500 rounded text-[9px] text-white flex items-center justify-center font-bold w-full">ab</div>
+          </div>
+          <!-- 2 of ab rectangles (stacked bottom left) -->
+          <div class="absolute top-[112px] left-0 w-[110px] h-[70px] flex flex-col gap-0.5">
+            <div class="bg-sky-500 rounded text-[9px] text-white flex items-center justify-center font-bold h-full">ab</div>
+            <div class="bg-sky-500 rounded text-[9px] text-white flex items-center justify-center font-bold h-full">ab</div>
+          </div>
+          <!-- 4 of b^2 squares (2x2 grid bottom right) -->
+          <div class="absolute top-[112px] left-[112px] w-[70px] h-[70px] grid grid-cols-2 gap-0.5 bg-amber-600 p-0.5 rounded-br-lg">
+            <div class="bg-amber-400 rounded text-[8px] text-white flex items-center justify-center font-bold">b²</div>
+            <div class="bg-amber-400 rounded text-[8px] text-white flex items-center justify-center font-bold">b²</div>
+            <div class="bg-amber-400 rounded text-[8px] text-white flex items-center justify-center font-bold">b²</div>
+            <div class="bg-amber-400 rounded text-[8px] text-white flex items-center justify-center font-bold">b²</div>
+          </div>
+        `;
+
+        card.innerHTML = `
+          <div class="text-[10px] text-slate-500 font-bold">공식 전개: (a + 2b)²</div>
+          <div class="text-xs sm:text-sm font-black text-indigo-900">
+            (a + 2b)² = a² + 2·a·(2b) + (2b)²
+          </div>
+          <div class="text-xs font-black text-indigo-700 pt-0.5">
+            = <span class="text-mathA2">a²</span> + <span class="text-teal-600">4ab</span> + <span class="text-mathB2">4b²</span>
+          </div>
+          <div class="text-[10px] text-slate-500 pt-1 border-t border-indigo-200">
+            조각 구성: a² 조각 <strong>1개</strong> + ab 직사각형 <strong>4개</strong> + b² 조각 <strong>4개</strong>
+          </div>
+        `;
+      } 
+      else {
+        // Standard (a+b)^2
+        canvas.style.width = '170px';
+        canvas.style.height = '170px';
+        canvas.innerHTML = `
+          <div class="absolute top-0 left-0 w-[110px] h-[110px] bg-indigo-600 rounded-tl-lg text-xs text-white flex items-center justify-center font-bold">a²</div>
+          <div class="absolute top-0 left-[112px] w-[50px] h-[110px] bg-teal-600 rounded-tr-lg text-xs text-white flex items-center justify-center font-bold">ba</div>
+          <div class="absolute top-[112px] left-0 w-[110px] h-[50px] bg-sky-600 rounded-bl-lg text-xs text-white flex items-center justify-center font-bold">ab</div>
+          <div class="absolute top-[112px] left-[112px] w-[50px] h-[50px] bg-amber-600 rounded-br-lg text-xs text-white flex items-center justify-center font-bold">b²</div>
+        `;
+
+        card.innerHTML = `
+          <div class="text-[10px] text-slate-500 font-bold">기본 공식: (a + b)²</div>
+          <div class="text-xs sm:text-sm font-black text-indigo-900 font-mono">
+            (a + b)² = a² + 2ab + b²
+          </div>
+          <div class="text-[10px] text-slate-500 pt-1 border-t border-indigo-200">
+            조각 구성: a² 조각 <strong>1개</strong> + ab 직사각형 <strong>2개</strong> + b² 조각 <strong>1개</strong>
+          </div>
+        `;
+      }
+    }
+
+    /* Speed Mental Math Challenge Game */
+    const SPEED_PROBLEMS = [
+      { num: 31, a: 30, b: 1, ans: 961, wrongs: [931, 951, 981] },
+      { num: 52, a: 50, b: 2, ans: 2704, wrongs: [2504, 2604, 2744] },
+      { num: 21, a: 20, b: 1, ans: 441, wrongs: [421, 440, 461] },
+      { num: 42, a: 40, b: 2, ans: 1764, wrongs: [1664, 1724, 1804] },
+      { num: 25, a: 20, b: 5, ans: 625, wrongs: [525, 605, 645] }
+    ];
+
+    let speedProblemIndex = 0;
+
+    function generateSpeedProblem() {
+      const prob = SPEED_PROBLEMS[speedProblemIndex % SPEED_PROBLEMS.length];
+      AppState.currentSpeedProblem = prob;
+
+      document.getElementById('speedProblemText').textContent = `${prob.num}² = ?`;
+      document.getElementById('speedHintText').textContent = `(${prob.a} + ${prob.b})² = ${prob.a}² + 2·${prob.a}·${prob.b} + ${prob.b}²`;
+
+      const options = [prob.ans, ...prob.wrongs].sort(() => Math.random() - 0.5);
+      const container = document.getElementById('speedOptions');
+      container.innerHTML = '';
+
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg font-mono font-bold text-xs text-slate-800 transition-all';
+        btn.textContent = opt.toLocaleString();
+        btn.onclick = () => handleSpeedAnswer(opt, prob.ans, btn);
+        container.appendChild(btn);
+      });
+
+      const fb = document.getElementById('speedFeedback');
+      fb.classList.add('hidden');
+    }
+
+    function handleSpeedAnswer(selected, correct, btn) {
+      initAudio();
+      const fb = document.getElementById('speedFeedback');
+      fb.classList.remove('hidden');
+
+      if (selected === correct) {
+        playSound('snap');
+        AppState.speedCombo++;
+        AppState.speedScore += (10 * AppState.speedCombo);
+        btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+        fb.className = 'p-1.5 rounded-lg text-xs font-bold text-center bg-emerald-100 text-emerald-900 border border-emerald-300';
+        fb.textContent = `✓ 정답! +${10 * AppState.speedCombo}점 (${AppState.speedCombo}연속 콤보!)`;
+
+        setTimeout(() => {
+          speedProblemIndex++;
+          generateSpeedProblem();
+        }, 1000);
+      } else {
+        playSound('click');
+        AppState.speedCombo = 0;
+        btn.classList.add('bg-rose-100', 'text-rose-900', 'border-rose-300');
+        fb.className = 'p-1.5 rounded-lg text-xs font-bold text-center bg-rose-100 text-rose-900 border border-rose-300';
+        fb.textContent = `✕ 아쉬워요! 가운데 2ab 항을 더했는지 확인해 보세요!`;
+      }
+
+      document.getElementById('speedCombo').textContent = AppState.speedCombo;
+      document.getElementById('speedScore').textContent = AppState.speedScore;
     }
 
     /* ------------------------------------------------------------------------- */
-    /* 7. FORMATIVE ASSESSMENT QUIZ SYSTEM                                       */
+    /* 7. FORMATIVE ASSESSMENT QUIZ (WITH UNLIMITED RETRY FIX)                    */
     /* ------------------------------------------------------------------------- */
     const QUIZ_QUESTIONS = [
       {
@@ -1943,7 +1871,7 @@
         ],
         correctIndex: 0,
         explanation: "가로b×세로a(ba)와 가로a×세로b(ab) 두 개의 직사각형이 존재하며, 곱셈의 교환법칙(ba=ab)에 의해 합치면 2ab가 됩니다.",
-        hint: "웹 앱 2단계의 면적 도해를 떠올려보세요. 세로 직사각형과 가로 직사각형의 크기를 비교해 볼까요?"
+        hint: "2단계의 도해를 떠올려보세요. 세로 직사각형과 가로 직사각형의 크기를 비교해 볼까요?"
       },
       {
         id: 2,
@@ -1983,7 +1911,7 @@
       container.innerHTML = '';
       QUIZ_QUESTIONS.forEach((q) => {
         const questionCard = document.createElement('div');
-        questionCard.className = 'p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3';
+        questionCard.className = 'p-3 rounded-lg border border-slate-200 bg-slate-50/70 space-y-2';
         questionCard.id = `quizCard-${q.id}`;
 
         let optionsHtml = '';
@@ -1991,7 +1919,7 @@
           optionsHtml += `
             <button onclick="handleQuizAnswer(${q.id}, ${optIdx})" 
                     id="quizOpt-${q.id}-${optIdx}"
-                    class="quiz-btn text-left text-xs font-semibold p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 transition-all flex items-center justify-between w-full">
+                    class="quiz-btn text-left text-xs font-semibold p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 transition-all flex items-center justify-between w-full">
               <span>${opt}</span>
               <span id="quizRadio-${q.id}-${optIdx}" class="w-3.5 h-3.5 rounded-full border border-slate-300 shrink-0 ml-2"></span>
             </button>
@@ -2001,7 +1929,7 @@
         questionCard.innerHTML = `
           <div class="text-xs sm:text-sm font-bold text-slate-900 leading-snug">${q.question}</div>
           <div class="flex flex-col gap-1.5">${optionsHtml}</div>
-          <div id="quizFeedback-${q.id}" class="hidden p-2.5 rounded-lg text-xs font-medium leading-relaxed"></div>
+          <div id="quizFeedback-${q.id}" class="hidden p-2 rounded-lg text-xs font-medium leading-relaxed"></div>
         `;
 
         container.appendChild(questionCard);
@@ -2044,7 +1972,7 @@
         });
 
         playSound('snap');
-        feedbackEl.className = 'p-2.5 rounded-lg text-xs font-medium bg-emerald-100 text-emerald-900 border border-emerald-300';
+        feedbackEl.className = 'p-2 rounded-lg text-xs font-medium bg-emerald-100 text-emerald-900 border border-emerald-300';
         feedbackEl.innerHTML = `✓ 정답입니다! ${question.explanation}`;
         AppState.quizAnswers[questionId] = true;
       } else {
@@ -2059,16 +1987,14 @@
         }
 
         playSound('click');
-        feedbackEl.className = 'p-2.5 rounded-lg text-xs font-medium bg-rose-50 text-rose-900 border border-rose-200';
+        feedbackEl.className = 'p-2 rounded-lg text-xs font-medium bg-rose-50 text-rose-900 border border-rose-200';
         feedbackEl.innerHTML = `✕ 다시 짚어볼까요? 다른 보기를 선택해 보세요! <br><span class="text-rose-700 text-[11px] font-normal">💡 힌트: ${question.hint}</span>`;
         AppState.quizAnswers[questionId] = false;
       }
 
-      // Calculate how many questions are answered correctly
       const correctCount = Object.values(AppState.quizAnswers).filter(Boolean).length;
       document.getElementById('quizScoreBadge').textContent = `진행도: ${correctCount} / ${QUIZ_QUESTIONS.length} 정답`;
 
-      // When all questions are correctly answered, trigger completion & celebration!
       if (correctCount === QUIZ_QUESTIONS.length) {
         playSound('fanfare');
         if (window.confetti) {
@@ -2115,25 +2041,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
 
-      document.getElementById('theoryBtn')?.addEventListener('click', () => {
-        openModal('theoryModal');
-      });
-
-      document.getElementById('soundToggleBtn')?.addEventListener('click', () => {
-        AppState.soundEnabled = !AppState.soundEnabled;
-        const icon = document.getElementById('soundIcon');
-        const label = document.getElementById('soundLabel');
-        if (AppState.soundEnabled) {
-          if (icon) icon.setAttribute('data-lucide', 'volume-2');
-          if (label) label.textContent = '효과음 On';
-          playSound('click');
-        } else {
-          if (icon) icon.setAttribute('data-lucide', 'volume-x');
-          if (label) label.textContent = '효과음 Off';
-        }
-        if (window.lucide) lucide.createIcons();
-      });
-
+      // Hook Presentation Mode Toggle
       document.getElementById('presentModeBtn')?.addEventListener('click', () => {
         AppState.presentationMode = !AppState.presentationMode;
         playSound('click');
@@ -2142,6 +2050,22 @@
         if (label) {
           label.textContent = AppState.presentationMode ? '일반 모드' : '칠판 모드';
         }
+      });
+
+      // Hook Sound Toggle
+      document.getElementById('soundToggleBtn')?.addEventListener('click', () => {
+        AppState.soundEnabled = !AppState.soundEnabled;
+        const icon = document.getElementById('soundIcon');
+        const label = document.getElementById('soundLabel');
+        if (AppState.soundEnabled) {
+          if (icon) icon.setAttribute('data-lucide', 'volume-2');
+          if (label) label.textContent = '소리 On';
+          playSound('click');
+        } else {
+          if (icon) icon.setAttribute('data-lucide', 'volume-x');
+          if (label) label.textContent = '소리 Off';
+        }
+        if (window.lucide) lucide.createIcons();
       });
 
       // Stage 1 Sliders
