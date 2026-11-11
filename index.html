@@ -163,9 +163,9 @@
         <!-- Utility Buttons -->
         <div class="flex items-center space-x-1.5 sm:space-x-2">
           <!-- Presentation / Chalkboard Mode Toggle -->
-          <button id="presentModeBtn" class="flex items-center space-x-1 px-2.5 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all" title="칠판 모드 전환">
-            <i data-lucide="presentation" class="w-3.5 h-3.5 text-emerald-600"></i>
-            <span class="hidden sm:inline" id="presentModeLabel">칠판 모드</span>
+          <button id="presentModeBtn" class="flex items-center space-x-1 px-2.5 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all" title="다크 모드 전환">
+            <i data-lucide="moon" class="w-3.5 h-3.5 text-indigo-600"></i>
+            <span class="hidden sm:inline" id="presentModeLabel">다크 모드</span>
           </button>
 
           <!-- Audio Sound Effects Toggle -->
@@ -724,6 +724,7 @@
 
       <!-- NEW FEATURE 2: 30-Second Speed Mental Math Challenge Game -->
       <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-200 rounded-xl p-4 shadow-2xs">
+        <!-- Header row: title + live stats -->
         <div class="flex items-center justify-between pb-2 mb-3 border-b border-amber-200/60">
           <div class="flex items-center gap-2">
             <span class="p-1 bg-amber-500 text-white rounded-md text-xs font-black">게임</span>
@@ -735,10 +736,39 @@
           </div>
         </div>
 
-        <div id="speedGameArea" class="bg-white p-3.5 rounded-xl border border-amber-200 space-y-3">
-          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div>
-              <span class="text-[11px] text-slate-400 font-bold block mb-0.5">도전 문제 (곱셈 공식을 써서 암산하세요!)</span>
+        <!-- READY STATE: shown before game starts -->
+        <div id="speedReadyArea" class="bg-white p-4 rounded-xl border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-xs text-slate-600 leading-relaxed max-w-sm">
+            <p class="font-black text-slate-800 text-sm mb-1">⚡ 규칙 안내</p>
+            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+              <li>30초 안에 가능한 많은 문제를 맞히세요!</li>
+              <li>빠를수록 <span class="text-amber-600 font-bold">시간 보너스 점수</span>가 올라가요</li>
+              <li>연속 정답 시 <span class="text-orange-600 font-bold">콤보 배율</span>이 적용됩니다</li>
+              <li>오답 선택 시 <span class="text-rose-600 font-bold">처음 고른 오답이 기록</span>됩니다</li>
+            </ul>
+          </div>
+          <button onclick="startSpeedChallenge()" class="shrink-0 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-black text-sm rounded-xl shadow-md transition-all flex items-center gap-2">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            START
+          </button>
+        </div>
+
+        <!-- ACTIVE GAME STATE: shown during 30-second countdown -->
+        <div id="speedGameArea" class="hidden bg-white p-3.5 rounded-xl border border-amber-200 space-y-3">
+          <!-- Problem area + countdown timer -->
+          <div class="flex flex-col sm:flex-row items-start justify-between gap-3">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-1">
+                <span class="text-[11px] text-slate-400 font-bold">곱셈 공식으로 암산하세요!</span>
+                <!-- Countdown Timer badge (small, beside problem) -->
+                <div class="flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                  <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2"/></svg>
+                  <span id="speedCountdown" class="text-sm font-black text-amber-700 font-mono">30</span>
+                  <span class="text-[10px] text-slate-500">초</span>
+                </div>
+                <!-- Progress: Q x/5 -->
+                <span id="speedProgress" class="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">1 / 5</span>
+              </div>
               <div class="text-2xl sm:text-3xl font-black text-slate-900 font-mono tracking-tight" id="speedProblemText">
                 31² = ?
               </div>
@@ -746,13 +776,32 @@
                 (30 + 1)² = 30² + 2·30·1 + 1²
               </div>
             </div>
-
             <!-- 4 Options Grid -->
-            <div class="grid grid-cols-2 gap-2 w-full sm:w-72" id="speedOptions">
-              <!-- Dynamically filled by startSpeedChallenge() -->
+            <div class="grid grid-cols-2 gap-2 w-full sm:w-64" id="speedOptions">
+              <!-- Dynamically filled -->
             </div>
           </div>
           <div id="speedFeedback" class="hidden p-2 rounded-lg text-xs font-bold text-center"></div>
+        </div>
+
+        <!-- RESULT STATE: shown after game ends -->
+        <div id="speedResultArea" class="hidden bg-white p-4 rounded-xl border border-amber-200">
+          <div class="text-center mb-3">
+            <div class="text-3xl font-black text-indigo-700 font-mono" id="resultFinalScore">0점</div>
+            <div class="text-xs text-slate-500 mt-0.5" id="resultSummary"></div>
+          </div>
+          <!-- Per-question result log (teacher view) -->
+          <div class="mb-3">
+            <div class="text-xs font-black text-slate-700 mb-1.5 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              문제별 풀이 기록 (선생님 확인용)
+            </div>
+            <div id="resultLog" class="space-y-1.5 text-xs max-h-48 overflow-y-auto"></div>
+          </div>
+          <button onclick="resetSpeedChallenge()" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-xs transition-all flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            다시 도전하기
+          </button>
         </div>
       </div>
 
@@ -985,7 +1034,7 @@
       else if (stageNum === 3) {
         renderStage3();
         renderCoeffExpansion();
-        generateSpeedProblem();
+        resetSpeedChallenge(); // reset to ready state without starting
       }
 
       if (window.lucide) lucide.createIcons();
@@ -1795,21 +1844,81 @@
 
     /* Speed Mental Math Challenge Game */
     const SPEED_PROBLEMS = [
-      { num: 31, a: 30, b: 1, ans: 961, wrongs: [931, 951, 981] },
+      { num: 31, a: 30, b: 1, ans: 961,  wrongs: [931, 951, 981] },
       { num: 52, a: 50, b: 2, ans: 2704, wrongs: [2504, 2604, 2744] },
-      { num: 21, a: 20, b: 1, ans: 441, wrongs: [421, 440, 461] },
+      { num: 21, a: 20, b: 1, ans: 441,  wrongs: [421, 440, 461] },
       { num: 42, a: 40, b: 2, ans: 1764, wrongs: [1664, 1724, 1804] },
-      { num: 25, a: 20, b: 5, ans: 625, wrongs: [525, 605, 645] }
+      { num: 25, a: 20, b: 5, ans: 625,  wrongs: [525, 605, 645] }
     ];
 
+    // Speed game state
     let speedProblemIndex = 0;
+    let speedTimerInterval = null;
+    let speedTimeLeft = 30;
+    let speedProblemStartTime = 0; // timestamp when current problem was shown
+    let speedResultLog = [];       // per-question record for teacher view
+
+    function startSpeedChallenge() {
+      // Reset state
+      AppState.speedScore = 0;
+      AppState.speedCombo = 0;
+      speedProblemIndex = 0;
+      speedTimeLeft = 30;
+      speedResultLog = [];
+
+      document.getElementById('speedCombo').textContent = '0';
+      document.getElementById('speedScore').textContent = '0';
+
+      // Switch UI states
+      document.getElementById('speedReadyArea').classList.add('hidden');
+      document.getElementById('speedResultArea').classList.add('hidden');
+      document.getElementById('speedGameArea').classList.remove('hidden');
+
+      // Start countdown timer
+      updateCountdownDisplay();
+      speedTimerInterval = setInterval(() => {
+        speedTimeLeft--;
+        updateCountdownDisplay();
+        if (speedTimeLeft <= 0) {
+          endSpeedChallenge();
+        }
+      }, 1000);
+
+      // Show first problem
+      generateSpeedProblem();
+      playSound('snap');
+    }
+
+    function updateCountdownDisplay() {
+      const el = document.getElementById('speedCountdown');
+      if (!el) return;
+      el.textContent = speedTimeLeft;
+      // Visual urgency: turn red in last 10s
+      if (speedTimeLeft <= 10) {
+        el.classList.add('text-rose-600');
+        el.classList.remove('text-amber-700');
+      } else {
+        el.classList.add('text-amber-700');
+        el.classList.remove('text-rose-600');
+      }
+    }
 
     function generateSpeedProblem() {
-      const prob = SPEED_PROBLEMS[speedProblemIndex % SPEED_PROBLEMS.length];
+      if (speedProblemIndex >= SPEED_PROBLEMS.length) {
+        // All 5 problems done before time runs out
+        endSpeedChallenge();
+        return;
+      }
+
+      const prob = SPEED_PROBLEMS[speedProblemIndex];
       AppState.currentSpeedProblem = prob;
+      speedProblemStartTime = Date.now();
 
       document.getElementById('speedProblemText').textContent = `${prob.num}² = ?`;
-      document.getElementById('speedHintText').textContent = `(${prob.a} + ${prob.b})² = ${prob.a}² + 2·${prob.a}·${prob.b} + ${prob.b}²`;
+      document.getElementById('speedHintText').textContent =
+        `(${prob.a} + ${prob.b})² = ${prob.a}² + 2·${prob.a}·${prob.b} + ${prob.b}²`;
+      document.getElementById('speedProgress').textContent =
+        `${speedProblemIndex + 1} / ${SPEED_PROBLEMS.length}`;
 
       const options = [prob.ans, ...prob.wrongs].sort(() => Math.random() - 0.5);
       const container = document.getElementById('speedOptions');
@@ -1832,28 +1941,131 @@
       const fb = document.getElementById('speedFeedback');
       fb.classList.remove('hidden');
 
+      const prob = AppState.currentSpeedProblem;
+      const elapsed = (Date.now() - speedProblemStartTime) / 1000; // seconds taken
+      const timeBonus = Math.max(0, Math.round((5 - elapsed) * 4)); // up to +20 bonus for <5s
+
       if (selected === correct) {
         playSound('snap');
         AppState.speedCombo++;
-        AppState.speedScore += (10 * AppState.speedCombo);
+        // Base: 10 × combo, plus time bonus
+        const earned = (10 * AppState.speedCombo) + timeBonus;
+        AppState.speedScore += earned;
+
         btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
         fb.className = 'p-1.5 rounded-lg text-xs font-bold text-center bg-emerald-100 text-emerald-900 border border-emerald-300';
-        fb.textContent = `✓ 정답! +${10 * AppState.speedCombo}점 (${AppState.speedCombo}연속 콤보!)`;
+        fb.textContent = `✓ 정답! +${earned}점 (콤보×${AppState.speedCombo}${timeBonus > 0 ? ` + 속도 보너스 +${timeBonus}` : ''})`;
+
+        // Record: correct on first try (no wrong pick)
+        speedResultLog.push({
+          num: prob.num,
+          ans: prob.ans,
+          firstWrong: null,
+          timeTaken: elapsed.toFixed(1),
+          earned
+        });
+
+        document.getElementById('speedCombo').textContent = AppState.speedCombo;
+        document.getElementById('speedScore').textContent = AppState.speedScore;
 
         setTimeout(() => {
           speedProblemIndex++;
           generateSpeedProblem();
-        }, 1000);
+        }, 700);
+
       } else {
         playSound('click');
-        AppState.speedCombo = 0;
+
+        // Only record the FIRST wrong pick per problem
+        if (!prob._firstWrong) {
+          prob._firstWrong = selected;
+        }
+
         btn.classList.add('bg-rose-100', 'text-rose-900', 'border-rose-300');
-        fb.className = 'p-1.5 rounded-lg text-xs font-bold text-center bg-rose-100 text-rose-900 border border-rose-300';
-        fb.textContent = `✕ 아쉬워요! 가운데 2ab 항을 더했는지 확인해 보세요!`;
+        btn.disabled = true; // disable the wrong choice so they pick another
+
+        fb.className = 'p-1.5 rounded-lg text-xs font-bold text-center bg-rose-50 text-rose-900 border border-rose-200';
+        fb.textContent = `✕ 아쉬워요! 콤보가 초기화됐어요. 다른 답을 골라보세요! 💡 힌트: 가운데 2ab 항을 더했나요?`;
+
+        // Reset combo on wrong answer
+        AppState.speedCombo = 0;
+        document.getElementById('speedCombo').textContent = '0';
+      }
+    }
+
+    function endSpeedChallenge() {
+      clearInterval(speedTimerInterval);
+      speedTimerInterval = null;
+
+      // If a problem was in progress and had a wrong pick, log it
+      if (AppState.currentSpeedProblem && AppState.currentSpeedProblem._firstWrong !== undefined) {
+        const prob = AppState.currentSpeedProblem;
+        const alreadyLogged = speedResultLog.find(r => r.num === prob.num);
+        if (!alreadyLogged) {
+          speedResultLog.push({
+            num: prob.num,
+            ans: prob.ans,
+            firstWrong: prob._firstWrong || null,
+            timeTaken: '—',
+            earned: 0
+          });
+        }
       }
 
-      document.getElementById('speedCombo').textContent = AppState.speedCombo;
-      document.getElementById('speedScore').textContent = AppState.speedScore;
+      playSound('fanfare');
+      if (window.confetti) confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+
+      // Switch to result state
+      document.getElementById('speedGameArea').classList.add('hidden');
+      document.getElementById('speedResultArea').classList.remove('hidden');
+
+      document.getElementById('resultFinalScore').textContent = `${AppState.speedScore}점`;
+      const solved = speedResultLog.length;
+      document.getElementById('resultSummary').textContent =
+        `30초 동안 ${solved}문제 / ${SPEED_PROBLEMS.length}문제 풀이 완료`;
+
+      // Build teacher log
+      const logContainer = document.getElementById('resultLog');
+      logContainer.innerHTML = '';
+
+      speedResultLog.forEach((rec, idx) => {
+        const isWrong = !!rec.firstWrong;
+        const div = document.createElement('div');
+        div.className = `flex items-center justify-between p-2 rounded-lg border text-xs ${
+          isWrong
+            ? 'bg-rose-50 border-rose-200'
+            : 'bg-emerald-50 border-emerald-200'
+        }`;
+        div.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="font-black ${isWrong ? 'text-rose-600' : 'text-emerald-600'}">${isWrong ? '✕' : '✓'}</span>
+            <span class="font-bold text-slate-800">Q${idx + 1}. ${rec.num}² = <span class="font-mono">${rec.ans.toLocaleString()}</span></span>
+            ${isWrong ? `<span class="text-rose-700 text-[11px]">처음 선택: <strong>${rec.firstWrong.toLocaleString()}</strong></span>` : ''}
+          </div>
+          <div class="flex items-center gap-2 text-slate-500 shrink-0">
+            <span class="font-mono text-[11px]">${rec.timeTaken}초</span>
+            <span class="font-bold text-indigo-600">+${rec.earned}점</span>
+          </div>
+        `;
+        logContainer.appendChild(div);
+      });
+    }
+
+    function resetSpeedChallenge() {
+      clearInterval(speedTimerInterval);
+      speedTimerInterval = null;
+
+      // Clean up _firstWrong flags from problems
+      SPEED_PROBLEMS.forEach(p => { delete p._firstWrong; });
+
+      document.getElementById('speedReadyArea').classList.remove('hidden');
+      document.getElementById('speedGameArea').classList.add('hidden');
+      document.getElementById('speedResultArea').classList.add('hidden');
+
+      AppState.speedScore = 0;
+      AppState.speedCombo = 0;
+      document.getElementById('speedCombo').textContent = '0';
+      document.getElementById('speedScore').textContent = '0';
     }
 
     /* ------------------------------------------------------------------------- */
@@ -2048,7 +2260,7 @@
         document.body.classList.toggle('presentation-mode', AppState.presentationMode);
         const label = document.getElementById('presentModeLabel');
         if (label) {
-          label.textContent = AppState.presentationMode ? '일반 모드' : '칠판 모드';
+          label.textContent = AppState.presentationMode ? '라이트 모드' : '다크 모드';
         }
       });
 
