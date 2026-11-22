@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>수업실연 실전 큐시트 (A4 인쇄용) | 브루너 이항정리 (a+b)²</title>
+  <title>수업실연 실전 큐시트 (평가 설문지 만점 공략 A4 인쇄용) | 브루너 이항정리 (a+b)²</title>
   
   <!-- Pretendard Font -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -17,33 +17,35 @@
   <style>
     body {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-      color: #1e293b;
-      background-color: #f8fafc;
+      color: #0f172a;
+      background-color: #f1f5f9;
     }
 
     @media print {
       body {
         background-color: white !important;
         color: black !important;
-        font-size: 11pt;
+        font-size: 10.5pt;
+        padding: 0 !important;
       }
       .no-print {
         display: none !important;
       }
       .page-break {
         page-break-after: always;
+        break-after: page;
       }
       .sheet-page {
         box-shadow: none !important;
         border: none !important;
         margin: 0 !important;
-        padding: 0 !important;
+        padding: 4mm 2mm !important;
         width: 100% !important;
         min-height: auto !important;
       }
       @page {
         size: A4 portrait;
-        margin: 12mm 10mm 12mm 10mm;
+        margin: 8mm 8mm 8mm 8mm;
       }
     }
 
@@ -58,14 +60,14 @@
   <div class="no-print max-w-4xl mx-auto mb-6 flex flex-col sm:flex-row sm:items-center justify-between bg-slate-900 text-white p-4 rounded-2xl shadow-lg gap-4">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shrink-0 shadow-md">
-        <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+        <i data-lucide="clipboard-check" class="w-5 h-5"></i>
       </div>
       <div>
         <h2 class="text-sm font-bold flex items-center gap-2">
-          <span>수업실연 현장용 A4 출력 치트시트</span>
-          <span class="text-[10px] bg-indigo-500/40 text-indigo-200 px-2 py-0.5 rounded-full border border-indigo-400/30">공유 및 인쇄용</span>
+          <span>수업실연 30분 현장용 실전 큐시트</span>
+          <span class="text-[10px] bg-emerald-500/40 text-emerald-200 px-2 py-0.5 rounded-full border border-emerald-400/30">평가 설문지 20문항 만점 공략</span>
         </h2>
-        <p class="text-xs text-slate-400">누구나 링크로 열람 가능하며, 교탁 위에 올려두고 흘끗 보며 자연스럽게 수업을 이끌어갈 수 있습니다.</p>
+        <p class="text-xs text-slate-400">교탁 위에 올려두고 흘끗 보며 자연스럽게 5점 만점 평가를 이끌어내는 나만의 실전 가이드입니다.</p>
       </div>
     </div>
     <div class="flex items-center gap-2 shrink-0">
@@ -73,136 +75,159 @@
         <i data-lucide="external-link" class="w-3.5 h-3.5 text-indigo-400"></i>
         <span>수학 웹 앱</span>
       </a>
-      <button onclick="copyCuesheetLink()" id="copyLinkBtn" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 transition-all flex items-center gap-1.5" title="누구에게나 보낼 수 있는 이 페이지 링크 복사">
+      <button onclick="copyCuesheetLink()" id="copyLinkBtn" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 transition-all flex items-center gap-1.5" title="링크 복사">
         <i data-lucide="share-2" class="w-3.5 h-3.5 text-emerald-400"></i>
         <span id="copyLinkText">링크 복사</span>
       </button>
       <button onclick="window.print()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-1.5" title="A4 용지 2장으로 즉시 인쇄">
         <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-        <span>A4로 인쇄</span>
+        <span>A4로 인쇄 (2쪽)</span>
       </button>
     </div>
   </div>
 
-  <!-- A4 PAGE 1 CONTAINER -->
-  <div class="sheet-page max-w-4xl mx-auto bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-8">
+  <!-- ========================================================================= -->
+  <!-- A4 PAGE 1: 설문지 20문항 만점 공략 & 30분 타임라인별 행동 큐카드              -->
+  <!-- ========================================================================= -->
+  <div class="sheet-page max-w-4xl mx-auto bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm mb-8 page-break">
     
-    <!-- Header -->
-    <div class="border-b-2 border-slate-900 pb-3 mb-4 flex items-end justify-between">
+    <!-- Top Header -->
+    <div class="border-b-2 border-slate-900 pb-2.5 mb-3 flex items-end justify-between">
       <div>
         <div class="flex items-center gap-2">
-          <span class="bg-indigo-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">실전 큐시트</span>
-          <span class="text-xs font-bold text-slate-500">2026-2 수학교과교육론 | 수업실연 30분</span>
+          <span class="bg-indigo-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">A4 실전 가이드 P.1</span>
+          <span class="text-xs font-bold text-slate-500">2026-2 수학교과교육론 | 수업실연 30분 + 피드백 5분</span>
         </div>
-        <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5">
           브루너 EIS 표상으로 배우는 이항정리 <span class="text-indigo-600 font-mono">(a+b)²</span>
         </h1>
       </div>
       <div class="text-right text-xs font-bold text-slate-600">
-        <div>중학교 2학년 | 다항식의 곱셈</div>
+        <div>중학교 2학년 | 식의 계산 (곱셈 공식)</div>
         <div class="text-indigo-600 font-mono text-[11px]">https://creator-yeman.github.io/Bruner-math-app/</div>
       </div>
     </div>
 
-    <!-- 심사위원 어필 치트키 요약 (상단 박스) -->
-    <div class="grid grid-cols-3 gap-2.5 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs mb-5">
-      <div class="border-r border-slate-200 pr-2">
-        <span class="font-black text-indigo-700 block mb-0.5">💡 1. 브루너 이론 키워드</span>
+    <!-- 평가 설문지 20문항 5점 만점(매우 그렇다) 공략 치트키 -->
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs mb-3.5">
+      <div class="border-b sm:border-b-0 sm:border-r border-slate-200 pb-1.5 sm:pb-0 sm:pr-2">
+        <span class="font-black text-indigo-700 flex items-center gap-1 mb-0.5">
+          <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+          <span>[문항 10~13] 브루너 EIS</span>
+        </span>
         <span class="text-[11px] text-slate-600 leading-tight block">
-          <strong>활동적(E)</strong> 만지기 ➔ <strong>영상적(I)</strong> 눈으로 심상화 ➔ <strong>기호적(S)</strong> 공식화
+          교사 독점 설명 금지! 학생이 직접 <strong>만지고(E)</strong>, <strong>16칸 모눈 세고(I)</strong>, <strong>기호화(S)</strong>하게 유도!
         </span>
       </div>
-      <div class="border-r border-slate-200 pr-2">
-        <span class="font-black text-amber-700 block mb-0.5">🚨 2. 오개념 교정 포인트</span>
+      <div class="border-b sm:border-b-0 sm:border-r border-slate-200 pb-1.5 sm:pb-0 sm:pr-2">
+        <span class="font-black text-amber-700 flex items-center gap-1 mb-0.5">
+          <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+          <span>[문항 4, 5] 생각할 시간</span>
+        </span>
         <span class="text-[11px] text-slate-600 leading-tight block">
-          "(a+b)²=a²+b²" 착각에 대해 <strong>"직사각형 구멍 2개(2ab)"</strong>를 손으로 짚기!
+          발문 후 <strong>최소 3~5초 침묵 대기</strong>! “짝과 1분간 생각 설명하기”로 말할 기회 반드시 부여.
+        </span>
+      </div>
+      <div class="border-b sm:border-b-0 sm:border-r border-slate-200 pb-1.5 sm:pb-0 sm:pr-2">
+        <span class="font-black text-rose-700 flex items-center gap-1 mb-0.5">
+          <i data-lucide="git-branch" class="w-3.5 h-3.5"></i>
+          <span>[문항 7, 8] 오답 활용</span>
+        </span>
+        <span class="text-[11px] text-slate-600 leading-tight block">
+          $(a+b)^2=a^2+b^2$ 오답을 “왜?”로 반기며 <strong>“직사각형 2개 구멍”</strong>을 짚어 발문 전환!
         </span>
       </div>
       <div>
-        <span class="font-black text-emerald-700 block mb-0.5">💻 3. 에듀테크 액션</span>
+        <span class="font-black text-emerald-700 flex items-center gap-1 mb-0.5">
+          <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+          <span>[문항 14~17] 에듀테크 필연성</span>
+        </span>
         <span class="text-[11px] text-slate-600 leading-tight block">
-          도입부 <strong>[칠판 모드]</strong> 켜기 ➔ <strong>오개념 실험</strong> ➔ <strong>실시간 계산기</strong> 시연
+          지오지브라 대비 <strong>공식 자가발견 창</strong>, <strong>1:1 단위격자</strong>, <strong>오답기록 퀴즈</strong> 필연적 활용!
         </span>
       </div>
     </div>
 
-    <!-- 타임라인별 실전 흐름도 -->
-    <div class="space-y-3.5 text-xs sm:text-sm">
+    <!-- 타임라인별 실전 30분 흐름 & 대사 큐카드 -->
+    <div class="space-y-2.5 text-xs sm:text-[13px]">
       
       <!-- 1. 도입 (5분) -->
-      <div class="cue-box border-l-indigo-500 bg-indigo-50/40 p-3 rounded-r-xl border-t border-r border-b border-indigo-100">
+      <div class="cue-box border-l-indigo-600 bg-indigo-50/50 p-2.5 rounded-r-xl border border-indigo-100">
         <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5">
             <span class="px-2 py-0.5 bg-indigo-600 text-white font-black text-xs rounded">1. 도입</span>
             <span class="font-black text-slate-900 text-sm">오개념 떡밥 던지기 & 판서 셋팅</span>
+            <span class="text-[10px] font-bold text-indigo-700 bg-indigo-100 px-1.5 py-0.2 rounded border border-indigo-200">[설문 Q3, Q14, Q16]</span>
           </div>
           <span class="font-mono font-bold text-indigo-700 text-xs">00:00 ~ 05:00 (5분)</span>
         </div>
-        <div class="space-y-1 text-slate-700 leading-snug">
-          <p>• <strong>인사 및 전시학습 상기:</strong> “지난 시간 배운 분배법칙 $m(a+b)=ma+mb$ 기억나죠?”</p>
-          <p>• <strong>도발적 동기유발:</strong> <span class="bg-amber-100 text-amber-900 px-1 font-bold">“시험에서 많은 친구들이 $(a+b)^2 = a^2 + b^2$이라고 써서 틀립니다. 과연 이 식이 맞을까요, 틀릴까요?”</span></p>
-          <p>• <strong>교사 제스처 & 판서:</strong> 칠판 좌측에 큼직하게 <strong>$(a+b)^2 \stackrel{?}{=} a^2 + b^2$</strong> 적고 물음표에 동그라미.</p>
+        <div class="space-y-1 text-slate-700 leading-tight">
+          <p>• <strong>인사 및 전시학습 상기:</strong> “지난 시간 배운 분배법칙 $m(a+b)=ma+mb$ 기억나죠? 다항식 곱셈의 기초였습니다.”</p>
+          <p>• <strong>도발적 동기유발 (오개념 제시):</strong> <span class="bg-amber-100 text-amber-950 px-1 font-bold">“시험에서 많은 친구들이 ‘$(a+b)^2 = a^2 + b^2$’이라고 써서 틀립니다. 과연 이 식은 참일까요, 거짓일까요? 오늘 우리가 수학 수사관이 되어 비밀을 밝혀봅시다!”</span></p>
+          <p>• <strong>칠판 판서:</strong> 좌측에 큼직하게 <strong>$(a+b)^2 \stackrel{?}{=} a^2 + b^2$</strong> 적고 물음표에 동그라미 치기.</p>
           <p>• <strong>학습목표 제창:</strong> “블록 조작과 면적 도해로 완전제곱식 $(a+b)^2 = a^2 + 2ab + b^2$의 원리를 탐구하고 설명할 수 있다!”</p>
         </div>
       </div>
 
       <!-- 2. 전개 ① (10분) - 활동적(E) & 영상적(I) -->
-      <div class="cue-box border-l-teal-500 bg-teal-50/40 p-3 rounded-r-xl border-t border-r border-b border-teal-100">
+      <div class="cue-box border-l-teal-600 bg-teal-50/50 p-2.5 rounded-r-xl border border-teal-100">
         <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5">
             <span class="px-2 py-0.5 bg-teal-600 text-white font-black text-xs rounded">2. 전개 ①</span>
-            <span class="font-black text-slate-900 text-sm">손으로 만지고(E) ➔ 눈으로 심상화(I)</span>
-            <span class="text-[10px] font-bold bg-teal-100 text-teal-800 px-1.5 py-0.2 rounded border border-teal-200">★ 브루너 테마 핵심 1</span>
+            <span class="font-black text-slate-900 text-sm">손으로 만지고(E) ➔ 16칸 모눈으로 심상화(I)</span>
+            <span class="text-[10px] font-bold bg-teal-100 text-teal-800 px-1.5 py-0.2 rounded border border-teal-200">★ 설문 Q10, Q11, Q13 브루너 핵심 1</span>
           </div>
           <span class="font-mono font-bold text-teal-700 text-xs">05:00 ~ 15:00 (10분)</span>
         </div>
-        <div class="space-y-1 text-slate-700 leading-snug">
-          <p>• <strong>웹 앱 1단계(활동적 E) 지시:</strong> “태블릿 웹 앱을 열고 4개의 블록을 드래그해서 큰 정사각형 틀 $(a+b)^2$에 맞춰봅시다!”</p>
-          <p>• <strong>순회지도 멘트:</strong> (교실을 돌며) “철수는 $a^2$을 넣었네요! 손가락으로 가볍게 탭(클릭)해도 쏙 들어갑니다.”</p>
-          <p>• <strong>[결정적 발문 1]:</strong> <span class="bg-amber-100 text-amber-950 font-bold px-1">“화면의 '오개념 실험' 버튼을 눌러보세요. $a^2$과 $b^2$만 넣으면 왜 빈 곳이 생길까요? 그 빈자리의 정체는 뭐죠?”</span></p>
-          <p>• <strong>학생 예상답변 & 피드백:</strong> “직사각형 2개가 비어요!” ➔ “맞습니다! <strong>가로 $b \times$ 세로 $a$</strong>와 <strong>가로 $a \times$ 세로 $b$</strong> 직사각형 2개, 즉 <strong>$2ab$</strong>만큼 텅 비어버립니다!”</p>
-          <p>• <strong>웹 앱 2단계(영상적 I) 전환:</strong> “2단계로 넘어가서 <strong>[조각 분해]</strong>와 <strong>[단위 격자]</strong>를 켜보세요. 4개 영역의 눈금 수를 세어보며 넓이를 눈에 담아둡니다.”</p>
+        <div class="space-y-1 text-slate-700 leading-tight">
+          <p>• <strong>웹 앱 1단계(활동적 E) 조작 & 공식 자가발견:</strong> “태블릿 웹 앱 1단계에서 직사각형의 <strong>[🔄 회전]</strong> 버튼도 눌러보고, 블록들을 목표 틀에 맞춰보세요. 블록이 들어갈 때마다 우측 공식 창에 $a^2, 2ab, b^2$이 어떻게 채워지나요?”</p>
+          <p>• <strong>순회지도 & 대기 시간 [설문 Q4, Q6]:</strong> “철수는 회전해서 쏙 넣었네요! 각자 완성할 시간 1분을 줄게요.” (1분간 교실 순회하며 관찰)</p>
+          <p>• <strong>🔥 [결정적 발문 1 - 오개념 교정 & 2단계 전환, 설문 Q5, Q8]:</strong><br>
+            <span class="bg-amber-100 text-amber-950 font-bold px-1.5 py-0.5 rounded">“‘🚨 오개념 실험’ 버튼을 누르면 왜 빈 곳이 생길까요? 2단계 '단위 격자 눈금'을 켜고 모눈 칸수를 세어봅시다. 큰 사각형 a², 두 직사각형, 작은 사각형 b²은 각각 몇 칸이고 총 몇 칸인가요?”</span>
+          </p>
+          <p>• <strong>학생 답변 이어받기 [설문 Q7]:</strong> 학생 “큰 사각형 16칸, 직사각형 8칸씩 2개, 작은 사각형 4칸으로 다 더하면 36칸이에요!” ➔ <strong>교사 피드백:</strong> “정확합니다! 퍼즐 조각은 각각 <strong>넓이(16+8+8+4)</strong>를 가지며, 그 합은 전체 넓이 $6^2 = 36$과 완전히 같습니다! <strong>넓이 보존성이 증명</strong>된 것이죠!”</p>
         </div>
       </div>
 
-      <!-- 3. 전개 ② (10분) - 기호적(S) 공식화 -->
-      <div class="cue-box border-l-purple-500 bg-purple-50/40 p-3 rounded-r-xl border-t border-r border-b border-purple-100">
+      <!-- 3. 전개 ② (10분) - 기호적(S) 공식화 & 스피드 암산 -->
+      <div class="cue-box border-l-purple-600 bg-purple-50/50 p-2.5 rounded-r-xl border border-purple-100">
         <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5">
             <span class="px-2 py-0.5 bg-purple-600 text-white font-black text-xs rounded">3. 전개 ②</span>
-            <span class="font-black text-slate-900 text-sm">대수적 기호(S) 공식화 & 실시간 검증</span>
-            <span class="text-[10px] font-bold bg-purple-100 text-purple-800 px-1.5 py-0.2 rounded border border-purple-200">★ 브루너 테마 핵심 2</span>
+            <span class="font-black text-slate-900 text-sm">대수적 기호(S) 공식화 & 스피드 암산</span>
+            <span class="text-[10px] font-bold bg-purple-100 text-purple-800 px-1.5 py-0.2 rounded border border-purple-200">★ 설문 Q9, Q11, Q13 브루너 핵심 2</span>
           </div>
           <span class="font-mono font-bold text-purple-700 text-xs">15:00 ~ 25:00 (10분)</span>
         </div>
-        <div class="space-y-1 text-slate-700 leading-snug">
-          <p>• <strong>[결정적 발문 2]:</strong> <span class="bg-purple-100 text-purple-950 font-bold px-1">“화면의 분해된 4개 조각 넓이를 식으로 써서 모두 더하면 어떤 대수식이 만들어질까요?”</span></p>
-          <p>• <strong>학생 답변 유도:</strong> “$a^2 + ba + ab + b^2$인데, $ba=ab$니까 동류항끼리 더해서 <strong>$a^2 + 2ab + b^2$</strong>이 돼요!”</p>
-          <p>• <strong>판서 연계 (5단계 대수 전개 증명):</strong> 기하학적 도형 옆에 대수식을 나란히 판서!</p>
-          <div class="bg-white p-2 rounded border border-purple-200 font-mono text-xs space-y-0.5 text-slate-800">
-            <div>$(a+b)^2 = (a+b)(a+b)$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-slate-400 font-sans"># 정사각형 넓이 정의</span></div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$= a(a+b) + b(a+b)$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-indigo-600 font-sans font-bold"># 분배법칙 적용</span></div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$= a^2 + ab + ba + b^2$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-slate-400 font-sans"># 4개 조각 넓이 분해</span></div>
-            <div class="font-bold text-purple-700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$= a^2 + 2ab + b^2$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-700 font-sans"># 동류항 정리 (최종 완성!)</span></div>
+        <div class="space-y-1 text-slate-700 leading-tight">
+          <p>• <strong>🔥 [결정적 발문 2 - 대수 전개 형식화]:</strong> <span class="bg-purple-100 text-purple-950 font-bold px-1">“2단계에서 확인한 4개 영역($16, 8, 8, 4$)을 대수식으로 써서 분배법칙 $(a+b)(a+b)$로 전개하면 4개 조각은 어디에 위치할까요?”</span></p>
+          <p>• <strong>학생 발표 & 칠판 판서 연계 (5단계 대수 증명):</strong></p>
+          <div class="bg-white p-1.5 rounded border border-purple-200 font-mono text-xs space-y-0.5 text-slate-800">
+            <div>$(a+b)^2 = (a+b)(a+b)$ <span class="text-slate-400 font-sans text-[11px]">(정사각형 넓이 정의)</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$= a(a+b) + b(a+b)$ <span class="text-indigo-600 font-sans font-bold text-[11px]">(분배법칙 적용)</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$= a^2 + ab + ba + b^2$ <span class="text-slate-500 font-sans text-[11px]">(4개 조각 면적 매핑)</span></div>
+            <div class="font-bold text-purple-700">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$= a^2 + 2ab + b^2$ <span class="text-purple-700 font-sans text-[11px]">(곱셈 교환법칙 $ba=ab$ & 동류항 결합!)</span></div>
           </div>
-          <p>• <strong>실시간 계산기 시연:</strong> “웹 앱 3단계 슬라이더로 $a=5, b=3$을 넣으니 좌변 $(5+3)^2=64$, 우변 $25+30+9=64$ 완벽 일치하죠?”</p>
+          <p>• <strong>실시간 계산기 & 30초 스피드 암산 미니게임:</strong> “계산기 슬라이더를 움직여도 좌우변이 완벽히 일치하죠? 이제 아래 <strong>'30초 스피드 암산' START 버튼</strong>을 누르고 30초간 암산 콤보에 도전해 봅시다!” (학생 몰입 극대화)</p>
         </div>
       </div>
 
-      <!-- 4. 정리 (5분) - 실생활 암산 & 퀴즈 -->
-      <div class="cue-box border-l-emerald-500 bg-emerald-50/40 p-3 rounded-r-xl border-t border-r border-b border-emerald-100">
+      <!-- 4. 정리 (5분) - 실생활 암산 & 4단계 마스터 퀴즈 -->
+      <div class="cue-box border-l-emerald-600 bg-emerald-50/50 p-2.5 rounded-r-xl border border-emerald-100">
         <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5">
             <span class="px-2 py-0.5 bg-emerald-600 text-white font-black text-xs rounded">4. 정리</span>
-            <span class="font-black text-slate-900 text-sm">실생활 암산 마법 & 형성평가 퀴즈</span>
+            <span class="font-black text-slate-900 text-sm">실생활 암산 마법 & 4단계 마스터 퀴즈</span>
+            <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.2 rounded border border-emerald-200">[설문 Q8, Q14, Q18]</span>
           </div>
           <span class="font-mono font-bold text-emerald-700 text-xs">25:00 ~ 30:00 (5분)</span>
         </div>
-        <div class="space-y-1 text-slate-700 leading-snug">
-          <p>• <strong>[결정적 발문 3 (실생활 전이)]:</strong> <span class="bg-amber-100 text-amber-950 font-bold px-1">“공식을 써서 계산기 없이 52²을 어떻게 몇 초 만에 암산할 수 있을까요?”</span></p>
-          <p>• <strong>암산 풀이:</strong> $52^2 = (50+2)^2 = 50^2 + 2(50)(2) + 2^2 = 2500 + 200 + 4 = \mathbf{2704}$! (학생 탄성 유도)</p>
-          <p>• <strong>웹 퀴즈 확인:</strong> “태블릿 웹 앱 3단계 아래의 형성평가 퀴즈 4문항을 풀고 마스터 인증서를 띄워봅시다!”</p>
-          <p>• <strong>차시 예고:</strong> “다음 시간에는 합이 아닌 차의 제곱, $(a-b)^2$의 기하학적 도형을 파헤쳐 봅니다!”</p>
+        <div class="space-y-1 text-slate-700 leading-tight">
+          <p>• <strong>🔥 [결정적 발문 3 (실생활 전이)]:</strong> <span class="bg-amber-100 text-amber-950 font-bold px-1">“공식을 쓰면 $52^2$을 계산기 없이 어떻게 3초 만에 암산할 수 있을까요?”</span><br>
+            ➔ $52^2 = (50+2)^2 = 50^2 + 2(50)(2) + 2^2 = 2500 + 200 + 4 = \mathbf{2704}$! (학생 탄성 유도)</p>
+          <p>• <strong>4단계 마스터 퀴즈 탭 & 순회지도 피드백 [설문 Q8 핵심!]:</strong> “화면 상단의 <strong>'4단계: 마스터 퀴즈' 탭</strong>으로 이동하세요. 틀리더라도 힌트를 보고 다시 풀 수 있습니다!”<br>
+            ➔ (교실 순회하며 학생 화면 확인): “지수는 처음에 $2ab$를 깜빡해서 오답 뱃지가 떴었지만, 힌트를 보고 $8x$로 정답을 바로 찾아냈네요! 아주 훌륭합니다.”</p>
+          <p>• <strong>목표 도달 확인 & 인증서 수여 [설문 Q14]:</strong> “오늘의 학습 목표를 달성했나요? 전원 마스터 인증서를 띄워봅시다! 다음 시간에는 차의 제곱 $(a-b)^2$을 파헤쳐 봅니다!”</p>
         </div>
       </div>
 
@@ -211,124 +236,134 @@
   </div>
 
 
-  <!-- A4 PAGE 2 CONTAINER: 판서 계획 및 실전 대처 비법 -->
-  <div class="sheet-page max-w-4xl mx-auto bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+  <!-- ========================================================================= -->
+  <!-- A4 PAGE 2: 칠판 전면 판서도 & 설문 감점 방어벽 (Do & Don't)                 -->
+  <!-- ========================================================================= -->
+  <div class="sheet-page max-w-4xl mx-auto bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm">
     
-    <!-- Title -->
-    <div class="border-b border-slate-200 pb-2 mb-4 flex items-center justify-between">
-      <h3 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
-        <span>📋</span> 실전 판서 배치도 (Blackboard Layout) & 현장 돌발상황 대처법
-      </h3>
-      <span class="text-xs text-slate-400">교탁 위 참조용</span>
+    <!-- Top Header -->
+    <div class="border-b border-slate-200 pb-2.5 mb-3 flex items-center justify-between">
+      <div>
+        <span class="bg-slate-800 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">A4 실전 가이드 P.2</span>
+        <h3 class="text-base sm:text-lg font-black text-slate-900 mt-0.5 flex items-center gap-1.5">
+          <span>📋</span> 칠판 전면 판서 배치도 & 평가 설문 감점 방어벽 (Do & Don't)
+        </h3>
+      </div>
+      <span class="text-xs font-bold text-slate-400">교탁 위 상시 거치용</span>
     </div>
 
-    <!-- 칠판 판서 배치도 모형 -->
-    <div class="border-4 border-slate-800 rounded-2xl bg-slate-900 text-white p-4 font-mono text-xs mb-5 shadow-inner">
-      <div class="text-center text-slate-400 text-[10px] pb-2 border-b border-slate-800 uppercase tracking-widest mb-3">
-        [ 칠 판 전 면 판 서 배 치 도 ]
+    <!-- 칠판 전면 3분할 판서 배치도 -->
+    <div class="border-4 border-slate-800 rounded-2xl bg-slate-900 text-white p-3.5 font-mono text-xs mb-4 shadow-inner">
+      <div class="text-center text-slate-400 text-[10px] pb-1.5 border-b border-slate-800 uppercase tracking-widest mb-2.5">
+        [ 칠 판 전 면 3 분 할 판 서 배 치 도 ]
       </div>
       
       <div class="grid grid-cols-12 gap-3 text-slate-200">
-        <!-- 판서 좌측 -->
-        <div class="col-span-3 border-r border-slate-800 pr-2 space-y-2">
-          <div class="text-indigo-400 font-bold font-sans text-xs">【 1. 생각 열기 】</div>
-          <div class="text-[11px] text-slate-300">
-            • 전시학습 복습<br>
-            &nbsp;&nbsp;$m(a+b) = ma + mb$<br><br>
-            • 오늘의 탐구 문제<br>
-            &nbsp;&nbsp;<span class="text-amber-300 font-bold text-xs">$(a+b)^2 \stackrel{?}{=} a^2 + b^2$</span><br>
-            &nbsp;&nbsp;<span class="text-rose-400 font-bold text-[10px]">➜ 거짓! (2ab 누락)</span>
+        <!-- 판서 좌측: 생각 열기 & 목표 -->
+        <div class="col-span-3 border-r border-slate-800 pr-2 space-y-1.5">
+          <div class="text-indigo-400 font-bold font-sans text-xs">【 1. 생각 열기 & 목표 】</div>
+          <div class="text-[11px] text-slate-300 space-y-1">
+            <div>• 전시학습: $m(a+b)=ma+mb$</div>
+            <div>• 오늘의 탐구 문제:</div>
+            <div class="p-1.5 bg-slate-800 rounded border border-amber-400/30">
+              <span class="text-amber-300 font-bold text-xs">$(a+b)^2 \stackrel{?}{=} a^2 + b^2$</span><br>
+              <span class="text-rose-400 font-bold text-[10px]">➜ 거짓! (2ab 누락)</span>
+            </div>
+            <div class="text-[10px] text-slate-400 pt-1">• 학습 목표: 블록 조작과 면적 도해로 $(a+b)^2$ 공식 탐구 및 설명</div>
           </div>
         </div>
 
-        <!-- 판서 중앙 -->
-        <div class="col-span-5 border-r border-slate-800 px-2 space-y-2">
-          <div class="text-teal-400 font-bold font-sans text-xs">【 2. 기하학적 넓이 도해 (심상화) 】</div>
+        <!-- 판서 중앙: 기하학적 도해 (심상화) -->
+        <div class="col-span-5 border-r border-slate-800 px-2 space-y-1.5">
+          <div class="text-teal-400 font-bold font-sans text-xs">【 2. 넓이 도해 (단위 모눈 16+8+8+4) 】</div>
           <div class="p-2 bg-slate-800 rounded-lg text-center text-[10px] space-y-1">
-            <div class="text-slate-400">가로: a + b &nbsp;|&nbsp; 세로: a + b</div>
+            <div class="text-slate-400">가로: a(4) + b(2) &nbsp;|&nbsp; 세로: a(4) + b(2)</div>
             <div class="grid grid-cols-2 gap-1 text-[11px] font-bold my-1">
-              <div class="bg-indigo-600/80 p-2 rounded">a² (a×a)</div>
-              <div class="bg-teal-600/80 p-2 rounded">ba (b×a)</div>
-              <div class="bg-sky-600/80 p-2 rounded">ab (a×b)</div>
-              <div class="bg-amber-600/80 p-2 rounded">b² (b×b)</div>
+              <div class="bg-indigo-600/80 p-2 rounded">a² (4×4 = 16칸)</div>
+              <div class="bg-teal-600/80 p-2 rounded">ba (2×4 = 8칸)</div>
+              <div class="bg-sky-600/80 p-2 rounded">ab (4×2 = 8칸)</div>
+              <div class="bg-amber-600/80 p-2 rounded">b² (2×2 = 4칸)</div>
             </div>
-            <div class="text-emerald-400 font-bold text-[11px]">
-              전체 넓이 = a² + 2ab + b²
+            <div class="text-emerald-400 font-bold text-[11px] pt-0.5 border-t border-slate-700">
+              전체 면적 = 16 + 8 + 8 + 4 = 36칸 = (a+b)²
             </div>
           </div>
         </div>
 
-        <!-- 판서 우측 -->
-        <div class="col-span-4 pl-2 space-y-2">
-          <div class="text-purple-400 font-bold font-sans text-xs">【 3. 대수 공식 & 암산 적용 】</div>
+        <!-- 판서 우측: 대수 공식 & 암산 -->
+        <div class="col-span-4 pl-2 space-y-1.5">
+          <div class="text-purple-400 font-bold font-sans text-xs">【 3. 대수 공식 & 실생활 암산 】</div>
           <div class="text-[11px] space-y-1 text-slate-300">
-            <div class="text-amber-300 font-bold text-xs bg-slate-800/80 p-1 rounded">
+            <div class="text-amber-300 font-bold text-xs bg-slate-800 p-1.5 rounded border border-indigo-500/40">
               (a+b)² = a² + 2ab + b²
             </div>
-            <div class="text-[10px] text-slate-400 pt-1">
-              [실생활 암산 마법]<br>
-              52² = (50 + 2)²<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;= 50² + 2·50·2 + 2²<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;= 2500 + 200 + 4<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;= <strong class="text-emerald-400 font-mono">2,704</strong>
+            <div class="text-[10px] text-slate-400 pt-0.5 space-y-0.5">
+              <div>[실생활 암산 적용]</div>
+              <div>$52^2 = (50 + 2)^2$</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;$= 50^2 + 2\cdot50\cdot2 + 2^2$</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;$= 2500 + 200 + 4 = \mathbf{2,704}$</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 현장 돌발상황 및 위기 대처 매뉴얼 -->
-    <div class="grid grid-cols-2 gap-4 text-xs">
+    <!-- 설문지 서술형 19·20번 대비 및 감점 방어벽 (Do & Don't) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs mb-3.5">
       
-      <!-- 위기 대처 1 -->
-      <div class="p-3 bg-rose-50 border border-rose-200 rounded-xl space-y-1">
-        <div class="flex items-center gap-1.5 font-bold text-rose-900">
-          <span>⚠️</span>
-          <span>상황 1: 학생이 블록 드래그를 어려워할 때</span>
+      <!-- 서술형 19번 모범 장면 유도 -->
+      <div class="p-3 bg-indigo-50/70 border border-indigo-200 rounded-xl space-y-1.5">
+        <div class="flex items-center gap-1.5 font-black text-indigo-950 text-xs">
+          <span class="p-1 bg-indigo-600 text-white rounded text-[10px]">설문 Q19</span>
+          <span>이론이 가장 잘 드러난 명장면 (평가자 서술 유도)</span>
         </div>
-        <p class="text-slate-700 leading-tight">
-          <strong>대처 멘트:</strong> “드래그가 잘 안 되는 친구는 블록을 <strong>가볍게 '톡' 탭(클릭)</strong>만 해보세요! 자석처럼 제자리로 쏙 들어갑니다.” (웹 앱의 원터치 보조 기능 강조)
+        <p class="text-slate-700 text-[11px] leading-relaxed">
+          <strong>평가자가 적게 될 장면:</strong> “1단계에서 학생들이 블록을 맞추며 공식이 자가발견되고, 2단계에서 단위 격자 16+8+8+4=36칸을 직접 세어 넓이 보존성을 확인한 뒤, 3단계 대수식 $(a+b)^2 = a^2+2ab+b^2$으로 체계화한 장면.”
         </p>
+        <div class="text-[10px] text-indigo-800 bg-white p-1.5 rounded border border-indigo-200 font-medium">
+          💡 <strong>행동 팁:</strong> 2단계에서 모눈 16칸을 손가락으로 짚으며 “16+8+8+4가 왜 전체 36과 같은지” 학생에게 소리 내어 확인시키기!
+        </div>
       </div>
 
-      <!-- 위기 대처 2 -->
-      <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl space-y-1">
-        <div class="flex items-center gap-1.5 font-bold text-amber-900">
-          <span>⏱️</span>
-          <span>상황 2: 1단계 조작에 시간이 너무 지체될 때</span>
+      <!-- 서술형 20번 감점 방지벽 -->
+      <div class="p-3 bg-rose-50/70 border border-rose-200 rounded-xl space-y-1.5">
+        <div class="flex items-center gap-1.5 font-black text-rose-950 text-xs">
+          <span class="p-1 bg-rose-600 text-white rounded text-[10px]">설문 Q20</span>
+          <span>‘고치면 좋을 점’ 감점 방어 (Do & Don't 4대 수칙)</span>
         </div>
-        <p class="text-slate-700 leading-tight">
-          <strong>대처 멘트:</strong> “우측 상단의 <strong>[모두 자동 조립]</strong> 버튼을 누르면 4조각이 순식간에 맞춰집니다. 맞춰진 모양을 보고 바로 2단계 분해 뷰로 넘어가 볼까요?”
-        </p>
-      </div>
-
-      <!-- 위기 대처 3 -->
-      <div class="p-3 bg-blue-50 border border-blue-200 rounded-xl space-y-1">
-        <div class="flex items-center gap-1.5 font-bold text-blue-900">
-          <span>🙋</span>
-          <span>상황 3: 학생이 "ab와 ba가 왜 같은가요?" 물을 때</span>
-        </div>
-        <p class="text-slate-700 leading-tight">
-          <strong>대처 멘트:</strong> “$2 \times 3$이나 $3 \times 2$나 면적은 6으로 똑같죠? 곱셈의 교환법칙에 의해 세로 직사각형($ba$)과 가로 직사각형($ab$)의 넓이는 완전히 같습니다!”
-        </p>
-      </div>
-
-      <!-- 위기 대처 4 -->
-      <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1">
-        <div class="flex items-center gap-1.5 font-bold text-emerald-900">
-          <span>🌟</span>
-          <span>상황 4: 고득점을 위한 교사 태도 & 언어 팁</span>
-        </div>
-        <p class="text-slate-700 leading-tight">
-          학생 대답에 <strong>구체적 칭찬</strong>(“~라는 점을 아주 예리하게 관찰했네요!”), 교실 좌우 <strong>시선 분배</strong>, 웹 앱과 판서를 <strong>손짓으로 번갈아 가리키는 시각적 연결 제스처</strong> 유지!
-        </p>
+        <ul class="text-[11px] text-slate-700 space-y-1 leading-tight">
+          <li>❌ <strong>교사 혼자 판서 다 하기 금지:</strong> 반드시 학생에게 먼저 4개 조각 넓이를 질문하고 그 말을 받아 적을 것!</li>
+          <li>❌ <strong>발문 후 바로 답 말하기 금지:</strong> 질문 후 최소 3~5초간 침묵 대기할 것!</li>
+          <li>❌ <strong>오답 무시 금지:</strong> 오답이 나오면 “그 오답이 왜 자연스러운지” 웹 앱 오개념 실험으로 직접 보여줄 것!</li>
+          <li>❌ <strong>시간 초과 금지:</strong> 도입 5분, 전개① 10분, 전개② 10분, 정리 5분 타이머 칼같이 준수!</li>
+        </ul>
       </div>
 
     </div>
 
-    <!-- 하단 마무리 격려 -->
-    <div class="mt-4 pt-3 border-t border-slate-200 text-center text-xs text-slate-500 font-medium">
-      ✨ <strong>자신감을 가지세요!</strong> 준비된 에듀테크 웹 앱과 브루너의 탄탄한 3단계 논리가 여러분의 수업을 완벽하게 빛내줄 것입니다.
+    <!-- 현장 돌발상황 4대 대처 매뉴얼 -->
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 text-[11px]">
+      <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg">
+        <div class="font-bold text-slate-900 mb-0.5">⚠️ 블록 조작 지체 시</div>
+        <p class="text-slate-600 leading-tight">“탭(클릭)만 해도 쏙 들어갑니다. 시간이 부족하면 우측 <strong>[자동 완성]</strong> 버튼을 누르세요!”</p>
+      </div>
+      <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg">
+        <div class="font-bold text-slate-900 mb-0.5">⚠️ "ab=ba 왜 같죠?" 질문 시</div>
+        <p class="text-slate-600 leading-tight">“$2\times4$나 $4\times2$나 면적은 8로 똑같죠? 곱셈의 <strong>교환법칙</strong>입니다.”</p>
+      </div>
+      <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg">
+        <div class="font-bold text-slate-900 mb-0.5">⚠️ 태블릿 접속 지연 시</div>
+        <p class="text-slate-600 leading-tight">교사용 화면을 칠판 모드로 띄워 전체 시연하며 학생 발표 유도로 즉시 전환!</p>
+      </div>
+      <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg">
+        <div class="font-bold text-emerald-900 mb-0.5">🌟 고득점 필수 행동</div>
+        <p class="text-emerald-800 leading-tight">학생 답변에 <strong>구체적 칭찬</strong>(“~라는 점을 아주 예리하게 관찰했네요!”)과 양측 시선 분배!</p>
+      </div>
+    </div>
+
+    <!-- 하단 마무리 응원 -->
+    <div class="mt-3 pt-2 border-t border-slate-200 text-center text-xs text-slate-500 font-medium">
+      ✨ <strong>자신감을 가지세요!</strong> 완성도 높은 4단계 웹 앱과 브루너의 탄탄한 EIS 논리가 최고 점수를 보장합니다.
     </div>
 
   </div>
